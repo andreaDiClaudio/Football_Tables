@@ -5,7 +5,7 @@ class League
     public int EuropeLeague { get; set; }
     public int UpperLeague { get; set; }
     public int LowerLeague { get; set; }
-    List<Team> Teams = new List<Team>();
+    public List<Team> Teams { get; set; }
 
     public League(string name, int championsLeague, int europeLeague, int upperLeague, int lowerLeague){
         this.Name = name;
@@ -13,6 +13,7 @@ class League
         this.EuropeLeague = europeLeague;
         this.UpperLeague = upperLeague;
         this.LowerLeague = lowerLeague;
+        this.Teams = new List<Team>();
     }
 
     public override string ToString()

@@ -2,9 +2,17 @@
 {
     private static void Main(string[] args)
     {
+        List<League> leagues = new List<League>();
+
         try 
         {
-            Setup();
+            // Create Leagues, adds them to a List, and saves it:
+            leagues = Setup();
+            // Create Teams, saves them inside the corresponding league:
+            LoadTeams("./csv/teams_superligaen.csv", "./csv/teams_nordicbetligaen.csv", leagues);
+            // Setup is now ready! There are two leagues, each with its own List of teams,
+            // And the teams are initialized as well!
+            // We can now start working with it.
         } catch (Exception e)
         {
             Console.WriteLine(e);
@@ -12,7 +20,7 @@
         
     }
 
-    public static void Setup()
+    public static List<League> Setup()
     {
         // Path to Setup File:
         string setupPath = "./csv/setup.csv";
@@ -35,14 +43,55 @@
                     leagues.Add(league);
                 }
             }
-            Console.WriteLine(leagues[1].ToString());
-        } else {
+            return leagues;
+        } else 
+        {
             Console.WriteLine("Error reading the setup.csv file. Maybe it changed places?");
             throw new FileNotFoundException();
         }
     }
-}
 
-// What can we make to make this more efficient?
-// Reutilize methods for reading from files? (Only for teams I guess, the Setup needs its own?)
-// Maybe create a Teams Class, so the program holds state of the teams?
+    public static void LoadTeams(string superLigaPath, string nordicBetLigaPath, List<League> leagues)
+    {
+        // Add to Super Liga List of Teams:
+        if (File.Exists(superLigaPath))
+        {
+            using (StreamReader reader = new StreamReader(superLigaPath))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(",");
+                    Team team = new Team(values[0], values[1], values[2]);
+                    leagues[0].Teams.Add(team);
+                }
+            }
+        } else 
+        {
+            Console.WriteLine("Error reading the Super Liga file. Maybe it changed places?");
+            throw new FileNotFoundException();
+        }
+
+        // Add to Nordic Bet League List of Teams:
+        if (File.Exists(nordicBetLigaPath))
+        {
+            using (StreamReader reader = new StreamReader(nordicBetLigaPath))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(",");
+                    Team team = new Team(values[0], values[1], values[2]);
+                    leagues[1].Teams.Add(team);
+                }
+            }
+        } else 
+        {
+            Console.WriteLine("Error reading the Nordic Bet Liga file. Maybe it changed places?");
+            throw new FileNotFoundException();
+        }
+    }
+
+}
