@@ -3,6 +3,8 @@
     private static void Main(string[] args)
     {
         List<League> leagues = new List<League>();
+        League superLigaen;
+        League nordicBetLigaen;
 
         try 
         {
@@ -13,6 +15,22 @@
             // Setup is now ready! There are two leagues, each with its own List of teams,
             // And the teams are initialized as well!
             // We can now start working with it.
+            superLigaen = leagues[0];
+            nordicBetLigaen = leagues[1];
+
+            // Printing of a Table.
+            // CSV files for Matches.
+            // Update Teams with Info from Matches.
+            // Print Table again.
+
+            // Format Table:
+            // Think about how to achieve the ordering by manipulating the List and pass thar at the time of table generation.
+            // Make a method: parameter a List<paths> and print a table at the end.
+
+            // Dividing: Format the Table, Print the information in the Table. \\
+            // Working with lists to make sure everything prints as expected. 
+            
+
         } catch (Exception e)
         {
             Console.WriteLine(e);

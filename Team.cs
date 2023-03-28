@@ -26,7 +26,7 @@ class Team
         this.Points = 0;
         this.WinningStreak = "-----"; // Maybe use a Queue?
     }
-
+    
     public override string ToString()
     {
         return FullName + ": " + Abbreviation + ", " + SpecialRanking;
