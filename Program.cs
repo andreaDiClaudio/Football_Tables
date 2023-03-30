@@ -36,7 +36,7 @@
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
-                                    .ThenByDescending(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.GoalsAgainst)
                                     .ThenBy(team => team.FullName)
                                     .ToList();
 
