@@ -1,0 +1,8 @@
+Used this snippet to check if the method would return 12 teams for each league:
+
+LoadTeams("./csv/teams_superligaen.csv", "./csv/teams_nordicbetligaen.csv", leagues);
+superLigaen = leagues[0];
+nordicBetLigaen = leagues[1];
+
+Console.WriteLine(superLigaen.Teams.Count());
+Console.WriteLine(nordicBetLigaen.Teams.Count());

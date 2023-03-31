@@ -1,0 +1,16 @@
+Used this snippet to check if the ordering of the list was correctly done, the expected result was only one team out of order
+And first on the list.
+
+superLigaen.Teams[0].Points = 2;
+
+List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
+                                    //.ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    //.ThenByDescending(team => team.GoalsFor)
+                                    //.ThenByDescending(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList();
+
+            foreach (Team team in ordered)
+            {
+                Console.WriteLine(team.ToString());
+            }

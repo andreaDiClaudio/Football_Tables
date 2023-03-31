@@ -1,4 +1,4 @@
-﻿internal class Program
+internal class Program
 {
     private static void Main(string[] args)
     {
@@ -18,6 +18,8 @@
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
+            // Printing of a Table.
+
             // CSV files for Matches.
             // Update Teams with Info from Matches.
             // Print Table again.
@@ -29,6 +31,21 @@
             // Dividing: Format the Table, Print the information in the Table. \\
             // Working with lists to make sure everything prints as expected. 
 
+
+            // This works! =)
+            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList();
+
+            foreach (Team team in ordered)
+            {
+                Console.WriteLine(team.ToString());
+            }
+            
+            //Andrea - Table formatting test with leagues
             printTable(superLigaen);
             printTable(nordicBetLigaen);
           
