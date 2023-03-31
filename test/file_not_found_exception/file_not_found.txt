@@ -1,0 +1,34 @@
+Used this snippet to check if the code actually would raise a FileNotFoundException.
+It passed the test, the exception was raised and caught on Main.
+
+    
+    public static List<League> Setup()
+    {
+        // Path to Setup File:
+        string setupPath = "./csv/setups.csv";
+        List<League> leagues = new List<League>();
+        if (File.Exists(setupPath))
+        {
+            // Creates an instance of StreamReader to read from a file.
+            // The using statement also closes the StreamReader:
+            using (StreamReader reader = new StreamReader(setupPath))
+            {
+                // For skipping the first line:
+                reader.ReadLine();
+                // This reads from the file while the end is not yet reached:
+                while (!reader.EndOfStream)
+                {
+                    // Reading lines, then working with them. Easy peasy.
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(",");
+                    League league = new League(values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]));
+                    leagues.Add(league);
+                }
+            }
+            return leagues;
+        } else 
+        {
+            Console.WriteLine("Error reading the setup.csv file. Maybe it changed places?");
+            throw new FileNotFoundException();
+        }
+    }

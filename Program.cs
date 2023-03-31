@@ -18,6 +18,8 @@
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
+            Console.WriteLine(superLigaen.Teams.Count());
+
             // Printing of a Table.
             // CSV files for Matches.
             // Update Teams with Info from Matches.
@@ -29,6 +31,19 @@
 
             // Dividing: Format the Table, Print the information in the Table. \\
             // Working with lists to make sure everything prints as expected. 
+
+            // This works! =)
+            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList();
+
+            foreach (Team team in ordered)
+            {
+                Console.WriteLine(team.ToString());
+            }
             
 
         } catch (Exception e)
