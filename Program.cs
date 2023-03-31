@@ -1,4 +1,4 @@
-﻿internal class Program
+internal class Program
 {
     private static void Main(string[] args)
     {
@@ -18,9 +18,8 @@
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-            Console.WriteLine(superLigaen.Teams.Count());
-
             // Printing of a Table.
+
             // CSV files for Matches.
             // Update Teams with Info from Matches.
             // Print Table again.
@@ -31,6 +30,7 @@
 
             // Dividing: Format the Table, Print the information in the Table. \\
             // Working with lists to make sure everything prints as expected. 
+
 
             // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
@@ -45,7 +45,10 @@
                 Console.WriteLine(team.ToString());
             }
             
-
+            //Andrea - Table formatting test with leagues
+            printTable(superLigaen);
+            printTable(nordicBetLigaen);
+          
         } catch (Exception e)
         {
             Console.WriteLine(e);
@@ -127,4 +130,23 @@
         }
     }
 
+    /*TABLE FORMATTING*/
+            static void printTable(League league) {
+            Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+            Console.Write("|");
+            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+              "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
+              "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+            Console.Write("|");
+            Console.WriteLine();
+
+            league.Teams.ForEach(team => {
+                Console.Write("|");
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+              "1", team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, "Lol", team.Points, team.WinningStreak);
+                Console.Write("|");
+                Console.WriteLine();
+            });
+            Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+            }
 }
