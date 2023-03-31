@@ -18,7 +18,6 @@
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-            // Printing of a Table.
             // CSV files for Matches.
             // Update Teams with Info from Matches.
             // Print Table again.
@@ -129,7 +128,7 @@
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
               "1", team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, "Lol", team.Points, team.WinningStreak);
                 Console.Write("|");
-                Console.WriteLine(); // New line for the next row
+                Console.WriteLine();
             });
             Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
             }
