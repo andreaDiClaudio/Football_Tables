@@ -37,9 +37,10 @@ internal class Program
             }
             
             //Andrea - Table formatting test with leagues
-            //printTable(superLigaen);
+            printTable(superLigaen);
             //printTable(nordicBetLigaen);
             ReadSuperligaMatch(superligaMatches + "match_01.csv",superLigaen);
+            printTable(superLigaen);
             
           
         } catch (Exception e)
@@ -60,47 +61,47 @@ internal class Program
                 {
                     string line = reader.ReadLine();
                     string[] values = line.Split(",");
-
                     string[] result = values[2].Split("-");
+
                     Console.WriteLine("/*MATCH*/");
-                    Console.WriteLine($"Home results - {values[0]}: {result[0]}");//home results
-                    //Save the 'home result' into variable
+                    Console.WriteLine($"Home results - {values[0]}: {result[0]}");
                     int homeResult = int.Parse(result[0]);
-                    Console.WriteLine(value: $"away results - {values[1]}: {result[1]}");//away results
+                    Console.WriteLine(value: $"away results - {values[1]}: {result[1]}");
                     int awayResult = int.Parse(result[1]);
 
-                    //TODO improve ??
-                    league.Teams.ForEach(team => { //finde instead of foreach
-                        if (team.Abbreviation == values[0])
-                        {
-                            team.GamesPlayed ++;
+                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]);
+                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
+
+                    //Updating
+                    teamHome.GamesPlayed ++;
+                    teamAway.GamesPlayed ++;
+
+                    if (homeResult > awayResult)
+                    {
+                        teamHome.GamesWon ++;
+                        teamHome.Points += 3;
+                    } else if (homeResult < awayResult)
+                    {
+                        teamAway.GamesWon ++;
+                        teamAway.Points += 3;
+                    } else
+                    {
+                        teamHome.GamesTied ++;
+                        teamAway.GamesTied ++;
+
+                        teamHome.Points += 1;
+                        teamAway.Points += 1;
+                    }
+                    teamHome.GoalsFor += homeResult;
+                    teamAway.GoalsFor += awayResult;
+
+                    teamHome.GoalsAgainst += awayResult;
+                    teamAway.GoalsAgainst += homeResult;
                             
-                            if (homeResult > awayResult) 
-                            {
-                                team.GamesWon ++;
-                                team.Points += 3;
-                            } else if (//TODO
-                            ){
-                                team.GamesLost ++;
-                            } 
-                            if (homeResult == awayResult) 
-                            {
-                                team.GamesTied ++;
-                                team.Points += 1;
-                            }
-
-                            team.GoalsFor += homeResult;
-                            team.GoalsAgainst += awayResult;
-
-                            //golas for even negative
-                            
-
-                            Console.WriteLine($"Team updated: {team.Abbreviation} {team.SpecialRanking}, {team.FullName}, {team.GamesPlayed}, {team.GamesWon}, {team.GamesTied}, {team.GamesLost}, {team.GoalsFor}, {team.GoalsAgainst}, Lol , {team.Points}, {team.WinningStreak} ");
-                            Console.WriteLine();
-                        } else {
-                            //Console.WriteLine($"Could not find team : {values[0]}");
-                        }
-                    });
+                    Console.WriteLine($"Team home updated: Full Name: {teamHome.FullName}, Games played:{teamHome.GamesPlayed}, won:{teamHome.GamesWon}, tied:{teamHome.GamesTied}, lost:{teamHome.GamesLost}, for:{teamHome.GoalsFor}, against:{teamHome.GoalsAgainst}, Difference: Lol , points: {teamHome.Points}, Winning Streak:{teamHome.WinningStreak} ");
+                    Console.WriteLine($"Team away updated: Full Name: {teamAway.FullName}, Games played:{teamAway.GamesPlayed}, won:{teamAway.GamesWon}, tied:{teamAway.GamesTied}, lost:{teamAway.GamesLost}, for:{teamAway.GoalsFor}, against:{teamAway.GoalsAgainst}, Difference: Lol , points: {teamAway.Points}, Winning Streak:{teamAway.WinningStreak} ");
+                    Console.WriteLine();
+                
                 }
             }
         }
@@ -191,9 +192,10 @@ internal class Program
             Console.WriteLine();
 
             league.Teams.ForEach(team => {
+                int difference = team.GoalsFor - team.GoalsAgainst;
                 Console.Write("|");
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-              "1", team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, "Lol", team.Points, team.WinningStreak);
+              "1", team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, difference, team.Points, team.WinningStreak);
                 Console.Write("|");
                 Console.WriteLine();
             });
