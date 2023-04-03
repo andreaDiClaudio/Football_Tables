@@ -10,7 +10,7 @@ class Team
     public int GoalsFor { get; set; }
     public int GoalsAgainst { get; set; }
     public int Points { get; set; }
-    public string WinningStreak { get; set; }
+    public string WinningStreak { get; set; } //TODO make it a Queue
 
     public Team(string abbreviation, string fullName, string specialRanking)
     {

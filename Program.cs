@@ -5,6 +5,8 @@ internal class Program
         List<League> leagues = new List<League>();
         League superLigaen;
         League nordicBetLigaen;
+        String superligaMatches = "./csv/superliga_matches/";
+        String nordicbetligaMatches = "./csv/nordicbetliga_matches/";
 
         try 
         {
@@ -18,19 +20,8 @@ internal class Program
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-            // Printing of a Table.
-
-            // CSV files for Matches.
             // Update Teams with Info from Matches.
             // Print Table again.
-
-            // Format Table:
-            // Think about how to achieve the ordering by manipulating the List and pass thar at the time of table generation.
-            // Make a method: parameter a List<paths> and print a table at the end.
-
-            // Dividing: Format the Table, Print the information in the Table. \\
-            // Working with lists to make sure everything prints as expected. 
-
 
             // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
@@ -42,18 +33,77 @@ internal class Program
 
             foreach (Team team in ordered)
             {
-                Console.WriteLine(team.ToString());
+                //Console.WriteLine(team.ToString()); TODO PUT IT BACK IN
             }
             
             //Andrea - Table formatting test with leagues
-            printTable(superLigaen);
-            printTable(nordicBetLigaen);
+            //printTable(superLigaen);
+            //printTable(nordicBetLigaen);
+            ReadSuperligaMatch(superligaMatches + "match_01.csv",superLigaen);
+            
           
         } catch (Exception e)
         {
             Console.WriteLine(e);
         }
         
+    }
+
+    /*READ SUPERLIGA MATCHES*/
+    public static void ReadSuperligaMatch(string matchPath, League league) {
+        if (File.Exists(matchPath)) 
+        {
+            using (StreamReader reader = new StreamReader(matchPath))
+            {
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(",");
+
+                    string[] result = values[2].Split("-");
+                    Console.WriteLine("/*MATCH*/");
+                    Console.WriteLine($"Home results - {values[0]}: {result[0]}");//home results
+                    //Save the 'home result' into variable
+                    int homeResult = int.Parse(result[0]);
+                    Console.WriteLine(value: $"away results - {values[1]}: {result[1]}");//away results
+                    int awayResult = int.Parse(result[1]);
+
+                    //TODO improve ??
+                    league.Teams.ForEach(team => { //finde instead of foreach
+                        if (team.Abbreviation == values[0])
+                        {
+                            team.GamesPlayed ++;
+                            
+                            if (homeResult > awayResult) 
+                            {
+                                team.GamesWon ++;
+                                team.Points += 3;
+                            } else if (//TODO
+                            ){
+                                team.GamesLost ++;
+                            } 
+                            if (homeResult == awayResult) 
+                            {
+                                team.GamesTied ++;
+                                team.Points += 1;
+                            }
+
+                            team.GoalsFor += homeResult;
+                            team.GoalsAgainst += awayResult;
+
+                            //golas for even negative
+                            
+
+                            Console.WriteLine($"Team updated: {team.Abbreviation} {team.SpecialRanking}, {team.FullName}, {team.GamesPlayed}, {team.GamesWon}, {team.GamesTied}, {team.GamesLost}, {team.GoalsFor}, {team.GoalsAgainst}, Lol , {team.Points}, {team.WinningStreak} ");
+                            Console.WriteLine();
+                        } else {
+                            //Console.WriteLine($"Could not find team : {values[0]}");
+                        }
+                    });
+                }
+            }
+        }
     }
 
     public static List<League> Setup()
@@ -149,4 +199,7 @@ internal class Program
             });
             Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
             }
+
+
+
 }
