@@ -22,9 +22,6 @@ internal class Program
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-            // Update Teams with Info from Matches.
-            // Print Table again.
-
             // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
@@ -38,9 +35,8 @@ internal class Program
                 //Console.WriteLine(team.ToString()); TODO PUT IT BACK IN
             }
             
-            //Andrea - Table formatting test with leagues
-            //printTable(nordicBetLigaen);
             ReadMatch( SuperLigaMatchesFolder,superLigaen);
+            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
           
         } catch (Exception e)
         {
@@ -49,11 +45,8 @@ internal class Program
         
     }
 
-    /*READ SUPERLIGA MATCHES*/
+    /*READ MATCHES*/
     public static void ReadMatch(string csvFolder, League league) {
-        int pointsForPosition = 0;
-        int counter = 0;
-
         if (Directory.Exists(csvFolder)) 
         {
             string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
@@ -70,10 +63,11 @@ internal class Program
                     int homeResult = int.Parse(result[0]);
                     int awayResult = int.Parse(result[1]);
 
+                    //Assigns the team to variables
                     Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]);
                     Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
 
-                    //Updating
+                    //Updates teams
                     teamHome.GamesPlayed++;
                     teamAway.GamesPlayed++;
 
@@ -127,8 +121,8 @@ internal class Program
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
                     
-                    Console.WriteLine($"/*{league}*/");
-                    printTable(league);
+                    Console.WriteLine($"/*{league.Name}*/");
+                    PrintTable(league);
                 }
             }
         }
@@ -209,8 +203,8 @@ internal class Program
     }
 
     /*TABLE FORMATTING*/
-            //Formats table header
-    static void printTable(League league) {
+    static void PrintTable(League league) {
+        //Prints the table header
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
         Console.Write("|");
         Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
@@ -219,22 +213,33 @@ internal class Program
         Console.Write("|");
         Console.WriteLine();
 
-            //For each tem prints its line with info
-        league.Teams.ForEach(team => {
-            int difference = team.GoalsFor - team.GoalsAgainst;
-            string winningStreak = ""; 
+        // Sort the teams by points in descending order
+        List<Team> sortedTeams = league.Teams.OrderByDescending(t => t.Points).ToList();
 
-            foreach(string item in team.WinningStreak)
-            {
-                winningStreak += item + "|";
-            }
-                
+        // Assign positions to each team based on their sorted order
+        int position = 1;
+        int prevPoints = -1;
+        foreach (Team team in sortedTeams) 
+        {
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
-            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-                "0",team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            if (team.Points != prevPoints)
+            {
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            position++;
+            } else //TODO check also for the next team isntead of only the previous
+            {
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            }
             Console.Write("|");
             Console.WriteLine();
-        });
+            prevPoints = team.Points;
+        }
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
     }
 }
