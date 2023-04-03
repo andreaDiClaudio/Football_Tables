@@ -98,10 +98,10 @@ internal class Program
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
                             
-                    Console.WriteLine($"Team home updated: Full Name: {teamHome.FullName}, Games played:{teamHome.GamesPlayed}, won:{teamHome.GamesWon}, tied:{teamHome.GamesTied}, lost:{teamHome.GamesLost}, for:{teamHome.GoalsFor}, against:{teamHome.GoalsAgainst}, Difference: Lol , points: {teamHome.Points}, Winning Streak:{teamHome.WinningStreak} ");
-                    Console.WriteLine($"Team away updated: Full Name: {teamAway.FullName}, Games played:{teamAway.GamesPlayed}, won:{teamAway.GamesWon}, tied:{teamAway.GamesTied}, lost:{teamAway.GamesLost}, for:{teamAway.GoalsFor}, against:{teamAway.GoalsAgainst}, Difference: Lol , points: {teamAway.Points}, Winning Streak:{teamAway.WinningStreak} ");
+                    Console.WriteLine($"Team home updated: abbr: {teamHome.Abbreviation}, Games played:{teamHome.GamesPlayed}, won:{teamHome.GamesWon}, tied:{teamHome.GamesTied}, lost:{teamHome.GamesLost}, for:{teamHome.GoalsFor}, against:{teamHome.GoalsAgainst}, Difference: Lol , points: {teamHome.Points}, Winning Streak:{teamHome.WinningStreak} ");
+                    Console.WriteLine($"Team away updated: abbr: {teamAway.Abbreviation}, Games played:{teamAway.GamesPlayed}, won:{teamAway.GamesWon}, tied:{teamAway.GamesTied}, lost:{teamAway.GamesLost}, for:{teamAway.GoalsFor}, against:{teamAway.GoalsAgainst}, Difference: Lol , points: {teamAway.Points}, Winning Streak:{teamAway.WinningStreak} ");
                     Console.WriteLine();
-                
+
                 }
             }
         }
