@@ -5,8 +5,9 @@ internal class Program
         List<League> leagues = new List<League>();
         League superLigaen;
         League nordicBetLigaen;
-        String superligaMatches = "./csv/superliga_matches/";
-        String nordicbetligaMatches = "./csv/nordicbetliga_matches/";
+        
+        string SuperLigaMatchesFolder = "./csv/superliga_matches";
+        string NordicBetLigaMatchesFolder = "./csv/nordicbetliga_matches";
 
         try 
         {
