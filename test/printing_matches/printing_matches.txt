@@ -1,0 +1,19 @@
+// This snippet prints the URL of the files in case the directory is not empty. Check if reads correctly the contents of the folder:
+
+public static void ValidateMatches(string csvFolder, List<Team> teams)
+        {
+            if (Directory.Exists(csvFolder))
+            {
+                string[] matches = Directory.GetFiles(csvFolder, "*.csv");
+                foreach (string filePath in matches)
+                {
+                    Console.WriteLine(filePath);
+                }
+                
+            } 
+            else 
+            {
+                Console.WriteLine("No such directory.");
+                throw new DirectoryNotFoundException();
+            }
+        }

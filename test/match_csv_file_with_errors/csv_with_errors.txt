@@ -1,0 +1,36 @@
+// I used this code snippet to check if the exception gets called when there's an error in the CSV file:
+
+public static void ValidateMatches(string csvFolder, List<Team> teams)
+        {
+            if (Directory.Exists(csvFolder))
+            {
+                string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
+                foreach (string match in matchPath)
+                {
+                    using (StreamReader reader = new StreamReader(match))
+                    {
+                        // Again, ignore first line in every file:
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] values = line.Split(",");
+                            Team teamA = teams.Find(team => team.Abbreviation == values[0]);
+                            Team teamB = teams.Find(team => team.Abbreviation == values[1]);
+
+                            if (teamA != null && teamB != null)
+                            {
+                                Console.WriteLine(teamA.ToString() + " " + teamB.ToString());
+                            }
+                            else
+                            {
+                                Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + "does not exist as a team.");
+                                throw new Exception();
+                            }
+                        }
+                    }
+                }
+
+// This, with a fully correct csv file does not generate errors.
+// I introduced errors on purpose to check:
+// And it gave the error as expected!

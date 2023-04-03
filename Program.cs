@@ -6,6 +6,9 @@ internal class Program
         League superLigaen;
         League nordicBetLigaen;
 
+        string SuperLigaMatchesFolder = "./csv/superliga_matches";
+        string NordicBetLigaMatchesFolder = "./csv/nordicbetliga_matches";
+
         try 
         {
             // Create Leagues, adds them to a List, and saves it:
@@ -18,21 +21,10 @@ internal class Program
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-            // Printing of a Table.
+            // CSV FILE VALIDATION:
+            ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
+            ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
-            // CSV files for Matches.
-            // Update Teams with Info from Matches.
-            // Print Table again.
-
-            // Format Table:
-            // Think about how to achieve the ordering by manipulating the List and pass thar at the time of table generation.
-            // Make a method: parameter a List<paths> and print a table at the end.
-
-            // Dividing: Format the Table, Print the information in the Table. \\
-            // Working with lists to make sure everything prints as expected. 
-
-
-            // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
@@ -42,12 +34,12 @@ internal class Program
 
             foreach (Team team in ordered)
             {
-                Console.WriteLine(team.ToString());
+                //Console.WriteLine(team.ToString());
             }
             
             //Andrea - Table formatting test with leagues
-            printTable(superLigaen);
-            printTable(nordicBetLigaen);
+            //printTable(superLigaen);
+            //printTable(nordicBetLigaen);
           
         } catch (Exception e)
         {
@@ -149,4 +141,40 @@ internal class Program
             });
             Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
             }
+
+        // Read all the .csv files to check if the info inside is OK:
+        public static void ValidateMatches(string csvFolder, List<Team> teams)
+        {
+            if (Directory.Exists(csvFolder))
+            {
+                string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
+                foreach (string match in matchPath)
+                {
+                    using (StreamReader reader = new StreamReader(match))
+                    {
+                        // Again, ignore first line in every file:
+                        reader.ReadLine();
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            string[] values = line.Split(",");
+                            Team teamA = teams.Find(team => team.Abbreviation == values[0]);
+                            Team teamB = teams.Find(team => team.Abbreviation == values[1]);
+
+                            if (teamA == null || teamB == null)
+                            {
+                                Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
+                                throw new Exception();
+                            }
+                        }
+                    }
+                }         
+            } 
+            else 
+            {
+                Console.WriteLine("No such directory.");
+                throw new DirectoryNotFoundException();
+            }
+        }
+            
 }
