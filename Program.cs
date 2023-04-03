@@ -129,7 +129,6 @@ internal class Program
                     
                     Console.WriteLine($"/*{league}*/");
                     printTable(league);
-                    //TODO position
                 }
             }
         }
@@ -210,33 +209,32 @@ internal class Program
     }
 
     /*TABLE FORMATTING*/
-            static void printTable(League league) {
-            Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
-            Console.Write("|");
-            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-              "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
+            //Formats table header
+    static void printTable(League league) {
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+        Console.Write("|");
+        Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+            "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
               "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+        Console.Write("|");
+        Console.WriteLine();
+
+            //For each tem prints its line with info
+        league.Teams.ForEach(team => {
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = ""; 
+
+            foreach(string item in team.WinningStreak)
+            {
+                winningStreak += item + "|";
+            }
+                
+            Console.Write("|");
+            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "0",team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
             Console.Write("|");
             Console.WriteLine();
-
-            league.Teams.ForEach(team => {
-                int difference = team.GoalsFor - team.GoalsAgainst;
-                string winningStreak = ""; 
-
-                foreach(string item in team.WinningStreak)
-                {
-                    winningStreak += item + "|";
-                }
-
-                Console.Write("|");
-                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-               "0",team.Abbreviation , team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost, team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
-                Console.Write("|");
-                Console.WriteLine();
-            });
-            Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
-            }
-
-
-
+        });
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+    }
 }
