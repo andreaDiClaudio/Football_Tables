@@ -10,7 +10,7 @@ class Team
     public int GoalsFor { get; set; }
     public int GoalsAgainst { get; set; }
     public int Points { get; set; }
-    public string WinningStreak { get; set; } //TODO make it a Queue
+    public Queue<string> WinningStreak { get; set; }
 
     public Team(string abbreviation, string fullName, string specialRanking)
     {
@@ -24,7 +24,8 @@ class Team
         this.GoalsFor = 0;
         this.GoalsAgainst = 0;
         this.Points = 0;
-        this.WinningStreak = "-----"; // Maybe use a Queue?
+        //Queue<int> Q1 = new Queue<int>(new int[] { 1, 2, 3} );
+        this.WinningStreak = new Queue<string>(new string[] { "-", "-", "-", "-", "-" });
     }
     
     public override string ToString()
