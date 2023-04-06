@@ -220,9 +220,30 @@ internal class Program
                     teamAway.GoalsFor += awayResult;
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
+                    Console.WriteLine(counter);
+                    if (counter == 21)
+                    {
+                        Console.WriteLine($"/*{league.Name} - Match n.*/");
+                        PrintTable(league);
+                    }
+                    else if (counter > 22)
+                    {
 
-                    // Check if it's iteration 22 and divide the teams in the scoreboard
+                        //saves the first 6 poistion in the list
+                        upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
+                        //saves the last 6 poistion in the list
+                        lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
 
+                        if (counter == 20 || counter == 50 || counter == 100)
+                        {
+                            //prints the lists
+                            Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
+                            printDividedTable(upperScoreboard);
+                            Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
+                            printDividedTable(lowerScoreboard);
+                        }
+
+                    }
                     counter++;
                 }
             }
@@ -232,21 +253,14 @@ internal class Program
              */
         }
 
-        upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
-        lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
-
+        //prints the lists
         Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
         printDividedTable(upperScoreboard);
         Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
         printDividedTable(lowerScoreboard);
 
-        //Prints Only the last table
-        Console.WriteLine($"/*{league.Name}*/");
-        PrintTable(league);
-
-        // Print the upper and lower scoreboards
-
     }
+
     // Read all the .csv files to check if the info inside is OK:
     public static void ValidateMatches(string csvFolder, List<Team> teams)
     {
@@ -321,6 +335,7 @@ internal class Program
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
                 "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
                 team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
             }
             Console.Write("|");
             Console.WriteLine();
@@ -331,6 +346,7 @@ internal class Program
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
     }
 
+    //Maybe can be Merged in the method 'printTable'.
     static void printDividedTable(List<Team> teams)
     {
         //Prints the table header
@@ -342,17 +358,37 @@ internal class Program
         Console.Write("|");
         Console.WriteLine();
 
-        teams.ForEach(team =>
+        // Assign positions to each team based on their sorted order, checking for the same position
+        int position = 1;
+        int prevPoints = -1;
+        for (int i = 0; i < teams.Count; i++)
         {
+            Team team = teams[i];
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
-            // Assign the team a position of '-'
-            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-            "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
-            team.GoalsFor, team.GoalsAgainst, "difference", team.Points, "winningStreak");
 
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints && (i == teams.Count - 1 || team.Points != teams[i + 1].Points))
+            {
+                // Assign the team the next available position
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                //Divides the scoreboard in two arrays
+                position++;
+            }
+            else
+            {
+                // Assign the team a position of '-'
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            }
             Console.Write("|");
             Console.WriteLine();
-        });
+            prevPoints = team.Points;
+        }
 
         // Prints the table footer
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
