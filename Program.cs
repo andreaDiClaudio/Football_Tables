@@ -32,7 +32,7 @@ internal class Program
             ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
             // This works! =)
-            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
+            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points) //TODO pass this in the readMatch
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
                                     .ThenBy(team => team.GoalsAgainst)
@@ -268,7 +268,7 @@ internal class Program
                         //The idea behind this was to save the general scorebord at match 22 and dived it into two boards. then i am doing the same as before, with the only difference that now the teams are displayed on the two boards. Not sure if this make sense. -Andrea 
                         if (counter == 132)
                         {
-                            //saves the first 6 poistion in the list
+                            //saves the first 6 poistion in the list //TODO copy and past nico's method for ordering line 35
                             upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
                             //saves the last 6 poistion in the list
                             lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
