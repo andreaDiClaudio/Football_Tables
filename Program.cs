@@ -22,10 +22,9 @@ internal class Program
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
 
-
             // CSV FILE VALIDATION:
-            ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
-            ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
+             ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
+             ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
             // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
@@ -37,13 +36,6 @@ internal class Program
 
             foreach (Team team in ordered)
             {
-                //Console.WriteLine(team.ToString());
-            }
-            
-            //Andrea - Table formatting test with leagues
-            //printTable(superLigaen);
-            //printTable(nordicBetLigaen);
-
                 //Console.WriteLine(team.ToString()); TODO PUT IT BACK IN
             }
             
@@ -205,8 +197,9 @@ internal class Program
                 PrintTable(league); 
                 }
             }
-
-        // Read all the .csv files to check if the info inside is OK:
+        }
+    }
+    // Read all the .csv files to check if the info inside is OK:
         public static void ValidateMatches(string csvFolder, List<Team> teams)
         {
             if (Directory.Exists(csvFolder))
@@ -224,7 +217,6 @@ internal class Program
                             string[] values = line.Split(",");
                             Team teamA = teams.Find(team => team.Abbreviation == values[0]);
                             Team teamB = teams.Find(team => team.Abbreviation == values[1]);
-
                             if (teamA == null || teamB == null)
                             {
                                 Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
@@ -238,12 +230,9 @@ internal class Program
             {
                 Console.WriteLine("No such directory.");
                 throw new DirectoryNotFoundException();
-            }
-        }
-            
-        }
-    }
-
+             }
+         }
+     
     static void PrintTable(League league) {
     //Prints the table header
     Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
