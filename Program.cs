@@ -27,19 +27,21 @@ internal class Program
              ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
             // This works! =)
-            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
+            List<Team> orderedSuperLiga = superLigaen.Teams.OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
                                     .ThenBy(team => team.GoalsAgainst)
                                     .ThenBy(team => team.FullName)
                                     .ToList();
 
-            foreach (Team team in ordered)
-            {
-                //Console.WriteLine(team.ToString()); TODO PUT IT BACK IN
-            }
+            List<Team> orderedNordicBetLiga = nordicBetLigaen.Teams.OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList();
             
-            ReadMatch( SuperLigaMatchesFolder,superLigaen); //Refactor name?
+            ReadMatch(SuperLigaMatchesFolder, superLigaen); //Refactor name?
             ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor name?
           
         } catch (Exception e)
@@ -193,10 +195,11 @@ internal class Program
                 teamAway.GoalsAgainst += homeResult;
 
                 // Print the league standings after each match
-                Console.WriteLine($"/*{league.Name}*/"); 
-                PrintTable(league); 
+                //Console.WriteLine($"/*{league.Name}*/"); 
+                //PrintTable(league); 
                 }
             }
+            PrintTable(league); 
         }
     }
     // Read all the .csv files to check if the info inside is OK:
@@ -249,6 +252,7 @@ internal class Program
     // Assign positions to each team based on their sorted order, checking for the same position
     int position = 1;
     int prevPoints = -1;
+    int teamNumber = 1;
     for (int i = 0; i < sortedTeams.Count; i++)
     {
         Team team = sortedTeams[i];
@@ -256,14 +260,38 @@ internal class Program
         string winningStreak = string.Join("|", team.WinningStreak);
         Console.Write("|");
 
-        // Check if the team has the same points as the previous or next team
-        if (team.Points != prevPoints && (i == sortedTeams.Count - 1 || team.Points != sortedTeams[i + 1].Points))
+        // Check if the team has the same points as the previous team
+        // Nico: I fixed this. It just has to check if current team has the same number of points as previous team.
+        if (team.Points != prevPoints)
         {
+            // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
+            if (league.Name == "Super Liga")
+            {
+                if (position == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                } else if (position == 2) 
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
+            } else 
+            {
+                if (teamNumber == 1 || teamNumber == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+            }
+            if (teamNumber == 11 || teamNumber == 12){
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            
             // Assign the team the next available position
             Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
             position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
             team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            Console.ResetColor();
             position++;
+            teamNumber++;
         }
         else
         {
@@ -271,6 +299,7 @@ internal class Program
             Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
             "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
             team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            teamNumber++;
         }
         Console.Write("|");
         Console.WriteLine();
