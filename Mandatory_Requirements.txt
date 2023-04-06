@@ -110,5 +110,4 @@ int[] numbers = { 0, 1, 2, 3, 4, 5 };
 int[] range = numbers[2..4]; // get elements at index 2 and 3
 ------------------------
 10. Generics: is a feature in C# that allows you to define classes, interfaces, and methods that work with any data type, rather than a specific one. This means that you can write code that is more flexible and reusable, since it can work with a variety of different types.
-
-11. Generics are declared using angle brackets (<>) and a type parameter.
+Generics are declared using angle brackets (<>) and a type parameter.
