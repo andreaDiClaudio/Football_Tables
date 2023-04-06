@@ -44,8 +44,8 @@ internal class Program
                 //Console.WriteLine(team.ToString()); //I commented out this -A
             }
 
-            ReadMatch(SuperLigaMatchesFolder, superLigaen); //Refactor name?
-            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor name?
+            //ReadMatch(SuperLigaMatchesFolder, superLigaen); //Refactor method name? It is commente ou because of terminal too crowded -Andrea
+            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor method name? -Andrea
 
         }
         catch (Exception e)
@@ -132,12 +132,47 @@ internal class Program
         }
     }
 
-    // A method to read match data from CSV files and update the league standings.
+
+    // Read all the .csv files to check if the info inside is OK:
+    public static void ValidateMatches(string csvFolder, List<Team> teams)
+    {
+        if (Directory.Exists(csvFolder))
+        {
+            string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
+            foreach (string match in matchPath)
+            {
+                using (StreamReader reader = new StreamReader(match))
+                {
+                    // Again, ignore first line in every file:
+                    reader.ReadLine();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] values = line.Split(",");
+                        Team teamA = teams.Find(team => team.Abbreviation == values[0]);
+                        Team teamB = teams.Find(team => team.Abbreviation == values[1]);
+                        if (teamA == null || teamB == null)
+                        {
+                            Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
+                            throw new Exception();
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("No such directory.");
+            throw new DirectoryNotFoundException();
+        }
+    }
+
+    // A method to read match data from CSV files and update the league.
     public static void ReadMatch(string csvFolder, League league)
     {
         int counter = 1;
-        List<Team> upperScoreboard = new List<Team>();
-        List<Team> lowerScoreboard = new List<Team>();
+        List<Team> upperScoreboard = new();
+        List<Team> lowerScoreboard = new();
 
         if (Directory.Exists(csvFolder))
         {
@@ -168,7 +203,7 @@ internal class Program
                     Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]);
                     Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
 
-                    // Update the teams' standings based on the match result
+                    // Update the teams' info based on the match result
                     teamHome.GamesPlayed++;
                     teamAway.GamesPlayed++;
 
@@ -220,79 +255,48 @@ internal class Program
                     teamAway.GoalsFor += awayResult;
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
-                    Console.WriteLine(counter);
-                    if (counter == 21)
+
+                    //print statmente wrapped in a if statement because terminal was to crowded
+                    if (counter == 6 || counter == 60 || counter == 120 || counter == 131)
                     {
-                        Console.WriteLine($"/*{league.Name} - Match n.*/");
+                        Console.WriteLine($"/*{league.Name} - Iteration n.{counter}*/ ");
                         PrintTable(league);
                     }
-                    else if (counter > 22)
+
+                    if (counter > 131)
                     {
+                        //The idea behind this was to save the general scorebord at match 22 and dived it into two boards. then i am doing the same as before, with the only difference that now the teams are displayed on the two boards. Not sure if this make sense. -Andrea 
+                        if (counter == 132)
+                        {
+                            //saves the first 6 poistion in the list
+                            upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
+                            //saves the last 6 poistion in the list
+                            lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
+                        }
 
-                        //saves the first 6 poistion in the list
-                        upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
-                        //saves the last 6 poistion in the list
-                        lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
-
-                        if (counter == 20 || counter == 50 || counter == 100)
+                        //print statmente wrapped in a if statement because terminal was to crowded
+                        if (counter == 132 || counter == 138)
                         {
                             //prints the lists
-                            Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
+                            Console.WriteLine();
+                            Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Iteration n.{counter}*/");
                             printDividedTable(upperScoreboard);
-                            Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
+                            Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Iteration n.{counter}*/");
                             printDividedTable(lowerScoreboard);
+                            Console.WriteLine();
                         }
 
                     }
-                    counter++;
+                    counter++; // the counter is here so that i have more control on the matches. Each file is composed by 6 iterations (because of 6 lines of matches and results) so i can decide better if i want triggere events at counter = 1 or at counter = 6 (which are in the same csv files) -Andrea
                 }
             }
-            // Print the league standings after each match
-            /* Console.WriteLine($"--{league.Name}--");
-             * PrintTable(league);
-             */
         }
-
         //prints the lists
-        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
+        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
         printDividedTable(upperScoreboard);
-        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
+        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Final*/");
         printDividedTable(lowerScoreboard);
 
-    }
-
-    // Read all the .csv files to check if the info inside is OK:
-    public static void ValidateMatches(string csvFolder, List<Team> teams)
-    {
-        if (Directory.Exists(csvFolder))
-        {
-            string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
-            foreach (string match in matchPath)
-            {
-                using (StreamReader reader = new StreamReader(match))
-                {
-                    // Again, ignore first line in every file:
-                    reader.ReadLine();
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        string[] values = line.Split(",");
-                        Team teamA = teams.Find(team => team.Abbreviation == values[0]);
-                        Team teamB = teams.Find(team => team.Abbreviation == values[1]);
-                        if (teamA == null || teamB == null)
-                        {
-                            Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
-                            throw new Exception();
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            Console.WriteLine("No such directory.");
-            throw new DirectoryNotFoundException();
-        }
     }
 
     static void PrintTable(League league)
@@ -346,7 +350,7 @@ internal class Program
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
     }
 
-    //Maybe can be Merged in the method 'printTable'.
+    //Maybe can be Merged in the method 'printTable'.At the moment i need it because in the method 'printTable()' i am passing a league as argument. Here i am passing a list of teams (it is called in the 'readMatch() after diving the scoreboard into two). -Andrea 
     static void printDividedTable(List<Team> teams)
     {
         //Prints the table header
@@ -384,6 +388,7 @@ internal class Program
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
                 "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
                 team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
             }
             Console.Write("|");
             Console.WriteLine();
