@@ -1,0 +1,15 @@
+// Used this snippet to check if the folder appears as not existent (as it should)
+
+string SuperLigaMatchesFolder = "./csv/superliga_matches";
+ValidateMatches(SuperLigaMatchesFolder);
+
+public static void ValidateMatches(string csvFolder)
+        {
+            if (Directory.Exists(csvFolder))
+            {
+
+            } else {
+                Console.WriteLine("No such directory.");
+                throw new DirectoryNotFoundException();
+            }
+        }
