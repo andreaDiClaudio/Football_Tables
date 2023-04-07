@@ -63,12 +63,12 @@ internal class Program
     {
         // Path to Setup File:
         string setupPath = "./csv/setup.csv";
-        List<League> leagues = new List<League>();
+        List<League> leagues = new();
         if (File.Exists(setupPath))
         {
             // Creates an instance of StreamReader to read from a file.
             // The using statement also closes the StreamReader:
-            using (StreamReader reader = new StreamReader(setupPath))
+            using (StreamReader reader = new(setupPath))
             {
                 // For skipping the first line:
                 reader.ReadLine();
@@ -76,9 +76,10 @@ internal class Program
                 while (!reader.EndOfStream)
                 {
                     // Reading lines, then working with them. Easy peasy.
-                    string line = reader.ReadLine();
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
+
                     string[] values = line.Split(",");
-                    League league = new League(values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]));
+                    League league = new(values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]));
                     leagues.Add(league);
                 }
             }
@@ -96,14 +97,14 @@ internal class Program
         // Add to Super Liga List of Teams:
         if (File.Exists(superLigaPath))
         {
-            using (StreamReader reader = new StreamReader(superLigaPath))
+            using (StreamReader reader = new(superLigaPath))
             {
                 reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO Throws an error based on the assignment 
                     string[] values = line.Split(",");
-                    Team team = new Team(values[0], values[1], values[2]);
+                    Team team = new(values[0], values[1], values[2]);
                     leagues[0].Teams.Add(team);
                 }
             }
@@ -122,7 +123,7 @@ internal class Program
                 reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
                     string[] values = line.Split(",");
                     Team team = new Team(values[0], values[1], values[2]);
                     leagues[1].Teams.Add(team);
@@ -150,10 +151,10 @@ internal class Program
                     reader.ReadLine();
                     while (!reader.EndOfStream)
                     {
-                        string line = reader.ReadLine();
+                        string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO I throw an error based on the assignement
                         string[] values = line.Split(",");
-                        Team teamA = teams.Find(team => team.Abbreviation == values[0]);
-                        Team teamB = teams.Find(team => team.Abbreviation == values[1]);
+                        Team teamA = teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found: {values[0]}"); ;
+                        Team teamB = teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found: {values[1]}"); //TODO I throw an error based on the assignement
                         if (teamA == null || teamB == null)
                         {
                             Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
@@ -195,7 +196,7 @@ internal class Program
                 while (!reader.EndOfStream)
                 {
                     // Read a line from the CSV file and split it into an array of values
-                    string line = reader.ReadLine();
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
                     string[] values = line.Split(",");
 
                     // Split the third value (match result) into home and away scores
@@ -204,8 +205,8 @@ internal class Program
                     int awayResult = int.Parse(result[1]);
 
                     // Find the home and away teams in the league by their abbreviations
-                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]);
-                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
+                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}"); //TODO
+                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found{values[1]}"); //TODO
 
                     // Update the teams' info based on the match result
                     teamHome.GamesPlayed++;

@@ -62,4 +62,5 @@
     List<Team> upperLeague = ordered[0..6];
     List<Team> lowerLeague = superLiga.Team[7..12];
 
+## Generics
 # We have not used Generics in this project. The main point about Generics as we understand it is to create Reusable bits of code. While we know and understand that this can be useful, we could not find any place in our code where we could have benefitted from using Generics. It would only make the code less self-explanatory in our opinion. 
