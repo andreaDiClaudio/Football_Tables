@@ -1,0 +1,9 @@
+Question:
+Hi! I have a console application in c# where Im printing information by using Console.Write and formatting like {0,-4} {1,6} etc... I want to give each write portion a different color. How can I achieve this?
+
+Answer:
+
+To change the color of text in a console application in C#, you can use the Console.ForegroundColor property to set the foreground color of the console text. Here is an example of how you can set the color of each write portion:
+Console.ForegroundColor = ConsoleColor.Red; Console.Write("{0,-4}", "Hello"); Console.ForegroundColor = ConsoleColor.Blue; Console.Write("{0,6}", "World"); Console.ForegroundColor = ConsoleColor.Yellow; Console.Write("{0,10}", "!"); Console.ResetColor(); // Reset the color to the default color
+In this example, the first Console.Write will be printed in red, the second Console.Write will be printed in blue, and the third Console.Write will be printed in yellow.
+After setting the color, you can use Console.Write to print the text with the specified color. Make sure to reset the color back to the default color using Console.ResetColor() after you're done printing the text. This will ensure that any subsequent text will be printed with the default color.

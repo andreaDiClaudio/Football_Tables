@@ -1,0 +1,12 @@
+Nicolas
+
+Question:
+in C#, I have a list of football teams that have some properties: abbreviation of the name, name, goals for, goals against, total points, etc. I have to order them first by points, but if they are tied in points, then I have to order the tied teams in different ways. Can I chain order by statements like i would do in sql?
+
+Answer:
+Yes, in C# you can use the OrderBy and ThenBy methods to order a list of football teams by multiple properties.
+Here's an example code snippet that shows how to order a list of teams first by their total points, and then by their goal difference (which is the difference between goals for and goals against):
+List<Team> teams = new List<Team>(); // Add some teams to the list... var orderedTeams = teams.OrderByDescending(t => t.TotalPoints) .ThenByDescending(t => t.GoalsFor - t.GoalsAgainst) .ToList();
+In the example above, we start by ordering the list of teams in descending order by their total points using the OrderByDescending method. If two or more teams have the same total points, the ThenByDescending method is used to order the tied teams by their goal difference in descending order.
+You can continue to chain additional ThenBy or ThenByDescending methods to further order the tied teams by other properties if needed.
+Note that the OrderBy and ThenBy methods return a new, ordered sequence and do not modify the original list of teams. If you want to modify the original list, you can use the Sort method instead.

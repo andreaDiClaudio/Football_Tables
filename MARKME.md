@@ -78,11 +78,11 @@ We did not use Named & Optional Parameters, but , for example, we could have use
 
 But we could have:
 
-    League league = new(name: values[0], 
-                     score: Int32.Parse(values[1]), 
-                     wins: Int32.Parse(values[2]), 
-                     losses: Int32.Parse(values[3]), 
-                     draws: Int32.Parse(values[4]));
+    League league = new(Name: values[0], 
+                     ChampionsLeague: Int32.Parse(values[1]), 
+                     EuropeLeague: Int32.Parse(values[2]), 
+                     UpperLeague: Int32.Parse(values[3]), 
+                     LowerLeague: Int32.Parse(values[4]));
 
     leagues.Add(league);
 
@@ -94,7 +94,7 @@ We could have created the Tuple for Leagues like so:
     (string Name, int ChampionsLeague, int EuropeLeague, int UpperLeague, int LowerLeague, List<Team>) league = ("values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]), new List<Team> {}");
 
 # Exceptions
-We used exceptions on our project to notify the user when something went wrong. We made sure to also print a meaningful explanation of the problem to make it more clear. For example, on lines 81, 104, 124. All those exceptions are thrown and caught on the Main method in try-catch blocks of code, stopping the Project to continue. [WAITING]
+We used exceptions on our project to notify the user when something went wrong. We made sure to also print a meaningful explanation of the problem to make it more clear. For example, on lines 84, 108, 129, etc. All those exceptions are thrown and caught on the Main method in try-catch blocks of code, stopping the Project to continue.
 
 # Attributes and DataValidation
 We have not used Attributes or Data Validation on our Project. 
@@ -139,10 +139,10 @@ We did not use validation as we knew that the data that we were feeding the appl
 
 # Arrays / Collections
 We have used Lists through all the Project: Lists of Leagues and Lists of Teams. Each League has its own List of Teams, and then we create a couple more of Lists for dividing the League in two sections. We have not created Arrays, as Lists are a bit more flexible. In the case of this particular project, we could have used Arrays instead as the teams are always the same and so are the leagues.
-For example, we used Lists in lines 6, 58, 250, etc. [WAITING]
+For example, we used Lists in lines 6, 59, etc.
 
 # Ranges
-We have not used ranges in our project. The only place where we could have done so is Line [WAITING][ANDREA PLS PUSH SOON] while separating the List of Teams in two different arrays: 
+We have not used ranges in our project. The only place where we could have done so is Line 269 while separating the List of Teams in two different arrays: 
 
     List<Team> upperLeague = ordered[0..6];
     List<Team> lowerLeague = superLiga.Team[7..12];
