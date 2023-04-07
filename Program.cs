@@ -331,7 +331,7 @@ internal class Program
             Console.Write("|");
 
             // Check if the team has the same points as the previous or next team
-            if (team.Points != prevPoints && (i == sortedTeams.Count - 1 || team.Points != sortedTeams[i + 1].Points))
+            if (team.Points != prevPoints)
             {
                 // Assign the team the next available position
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
@@ -385,7 +385,7 @@ internal class Program
             Console.Write("|");
 
             // Check if the team has the same points as the previous or next team
-            if (team.Points != prevPoints && (i == teams.Count - 1 || team.Points != teams[i + 1].Points))
+            if (team.Points != prevPoints)
             {
                 // Assign the team the next available position
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
