@@ -118,7 +118,7 @@
         // What to do if validation failed.
     }
     ...
-## We did not use validation as we knew that the data that we were feeding the application was correct. With custom data or to ensure that the program has the least errors possible, Validation should be used.
+##### We did not use validation as we knew that the data that we were feeding the application was correct. With custom data or to ensure that the program has the least errors possible, Validation should be used.
 
 # Arrays / Collections
 ## We have used Lists through all the Project: Lists of Leagues and Lists of Teams. Each League has its own List of Teams, and then we create a couple more of Lists for dividing the League in two sections. We have not created Arrays, as Lists are a bit more flexible. In the case of this particular project, we could have used Arrays instead as the teams are always the same and so are the leagues.
