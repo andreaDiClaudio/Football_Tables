@@ -42,14 +42,7 @@ internal class Program
                                     .ThenBy(team => team.FullName)
                                     .ToList();
 
-            /*TODO I commented out this do we need it ? - Andrea 
-            foreach (Team team in ordered)
-            {
-                //Console.WriteLine(team.ToString()); 
-            }
-            */
-
-            //ReadMatch(SuperLigaMatchesFolder, superLigaen);
+            ReadMatch(SuperLigaMatchesFolder, superLigaen);
             ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
 
         }
@@ -76,7 +69,7 @@ internal class Program
                 while (!reader.EndOfStream)
                 {
                     // Reading lines, then working with them. Easy peasy.
-                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
 
                     string[] values = line.Split(",");
                     League league = new(values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]));
@@ -102,7 +95,7 @@ internal class Program
                 reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO Throws an error based on the assignment 
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
                     string[] values = line.Split(",");
                     Team team = new(values[0], values[1], values[2]);
                     leagues[0].Teams.Add(team);
@@ -123,7 +116,7 @@ internal class Program
                 reader.ReadLine();
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
                     string[] values = line.Split(",");
                     Team team = new Team(values[0], values[1], values[2]);
                     leagues[1].Teams.Add(team);
@@ -151,15 +144,10 @@ internal class Program
                     reader.ReadLine();
                     while (!reader.EndOfStream)
                     {
-                        string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO I throw an error based on the assignement
+                        string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
                         string[] values = line.Split(",");
-                        Team teamA = teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found: {values[0]}"); ;
-                        Team teamB = teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found: {values[1]}"); //TODO I throw an error based on the assignement
-                        if (teamA == null || teamB == null)
-                        {
-                            Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
-                            throw new Exception();
-                        }
+                        Team teamA = teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found: {values[0]} in {match}");
+                        Team teamB = teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found: {values[1]} in {match}");
                     }
 
                 }
@@ -176,9 +164,6 @@ internal class Program
     public static void ReadMatch(string csvFolder, League league)
     {
         int counter = 1;
-        //List<Team> upperScoreboard = new();
-        //List<Team> lowerScoreboard = new();
-
         if (Directory.Exists(csvFolder))
         {
             // Get all CSV files in the specified folder
@@ -196,7 +181,7 @@ internal class Program
                 while (!reader.EndOfStream)
                 {
                     // Read a line from the CSV file and split it into an array of values
-                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file"); //TODO
+                    string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
                     string[] values = line.Split(",");
 
                     // Split the third value (match result) into home and away scores
@@ -205,8 +190,8 @@ internal class Program
                     int awayResult = int.Parse(result[1]);
 
                     // Find the home and away teams in the league by their abbreviations
-                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}"); //TODO
-                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found{values[1]}"); //TODO
+                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]} in {match}");
+                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]) ?? throw new Exception($"Team not found{values[1]} in {match}");
 
                     // Update the teams' info based on the match result
                     teamHome.GamesPlayed++;
@@ -266,9 +251,6 @@ internal class Program
                         {
                             teamHome.WinningStreak.Dequeue();
                         }
-
-
-
                     }
 
                     teamHome.GoalsFor += homeResult;
@@ -350,19 +332,19 @@ internal class Program
             {
                 // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
                 //Changed to Pattern Matching TODO
-                Console.ForegroundColor = (league.Name, position, teamNumber) switch
+                Console.ForegroundColor = (league.Name, position, teamNumber, league.UpperScoreboard, league.LowerScoreboard) switch
                 {
                     //match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league
-                    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
+                    ("Super Liga", 1, _, _, _) => ConsoleColor.DarkYellow,
 
                     //match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league
-                    ("Super Liga", 2, _) => ConsoleColor.Magenta,
+                    ("Super Liga", 2, _, _, _) => ConsoleColor.Magenta,
 
                     //matches on the teamNumber value to set the foreground color for the first and second teams in any league that is not "Super Liga". 
-                    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+                    (_, _, var n, _, _) when n == 1 || n == 2 => ConsoleColor.Blue,
 
-                    //matches on the teamNumber value checking whether the team is in the last two positions of the league using the teams.Count property
-                    (_, _, var n) when n >= teams.Count - 1 => ConsoleColor.Red,
+                    //matches on the teamNumber value checking whether the team is in the last two positions of the league using the teams.Count property TODO
+                    (_, _, var n, _, var lowerScoreboard) when n >= teams.Count - 1 && lowerScoreboard.Contains(teams[i]) => ConsoleColor.Red,
                     _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
                 };
                 // Assign the team the next available position

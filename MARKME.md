@@ -40,6 +40,7 @@ In the project we only have used classes for 'Team' and 'League'.
 
 # Properties
 We used properties in the classe 'League.cs':
+
     public string Name { get; set; }
     public int ChampionsLeague { get; set; }
     public int EuropeLeague { get; set; }
@@ -142,6 +143,7 @@ For example, we used Lists in lines 6, 58, 250, etc. [WAITING]
 
 # Ranges
 We have not used ranges in our project. The only place where we could have done so is Line [WAITING][ANDREA PLS PUSH SOON] while separating the List of Teams in two different arrays: 
+
     List<Team> upperLeague = ordered[0..6];
     List<Team> lowerLeague = superLiga.Team[7..12];
 
