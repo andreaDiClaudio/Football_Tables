@@ -13,4 +13,4 @@ Once reached round 22, the scoreboard is divided in two: 'upperScoreboard' (firs
 
 The process continues until it reaches the final csv file.
 
-## By Nicolas Javier Jan and Andrea Di Claudio
+#### By Nicolas Javier Jan and Andrea Di Claudio
