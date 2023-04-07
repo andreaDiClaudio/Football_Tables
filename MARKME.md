@@ -6,6 +6,7 @@
 
 # Null handling
 We used the null coalescing operator to deal with nullable value types or reference types that may be null. Following there two example of how we implemented it:
+
     Example 1:
     string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
 
@@ -14,13 +15,16 @@ We used the null coalescing operator to deal with nullable value types or refere
 
 # String Interpolation
 We did use string interpolation for example when printing the league name above the scoreboard:
+
     Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
 
 or when throwing a new exception:
+
     Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}");
 
 # Pattern Matching
 We did pattern matching while polishing the code. We are using pattern matching in the method 'PrintTable()'. Following the example of pattern matching
+
     Console.ForegroundColor = (league.Name, position, teamNumber) switch
                 {
                     ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
@@ -61,6 +65,7 @@ and also in the class 'Team.cs'
 
 # Named & optional parameters
 We did not use Named & Optional Parameters, but , for example, we could have use it inside the 'SetUp()' method where now we have:
+
     League league = new(values[0], 
                     Int32.Parse(values[1]), 
                     Int32.Parse(values[2]), 
@@ -82,6 +87,7 @@ But we could have:
 # Tuples, deconstruction
 We did not use Tuples in our code, we decided to use Classes instead. Classes are better for when you want to have additional behaviours or functionalities beyond holding data. We could have used Tuples, for example, in the Setup part of the project, and created a couple of Tuples for the Leagues. The League Class holds some properties that are read only. After creation, we don't need to modify the data at all. 
 We could have created the Tuple for Leagues like so:
+
     (string Name, int ChampionsLeague, int EuropeLeague, int UpperLeague, int LowerLeague, List<Team>) league = ("values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]), new List<Team> {}");
 
 # Exceptions
@@ -91,6 +97,7 @@ We used exceptions on our project to notify the user when something went wrong. 
 We have not used Attributes or Data Validation on our Project. 
 We could have done Attributes in the following way, for example to show who made which classes:
 First, creating the Custom Attribute:
+
     public class AuthorAttribute : Attribute
     {
         public string Name {get; private set } // We don't want it to be changed after creation!
@@ -100,15 +107,21 @@ First, creating the Custom Attribute:
             Name = name;
         }
     }
+
 And then in, for example, the Team Class:
+
     [Author("Nicolas")]
     public class Team
     ...
+
 # Validation
 We could have used validation, for example in the Team class, for the Full Team Name:
+
     [Required]
     public string FullName { get; set; }
+
 And validate it with:
+
     List<ValidationResult> validationResult = new List<ValidationResult>;
     ValidationContext validationContext = new ValidationContext(team, null, null);
     Validator.TryValidateObject(team, validationContext, validationResults, true);
@@ -118,6 +131,7 @@ And validate it with:
         // What to do if validation failed.
     }
     ...
+
 We did not use validation as we knew that the data that we were feeding the application was correct. With custom data or to ensure that the program has the least errors possible, Validation should be used.
 
 # Arrays / Collections
