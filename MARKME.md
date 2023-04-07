@@ -1,5 +1,6 @@
 # Type system
 Every variable and constant has a type, as does every expression that evaluates to a value. For example :
+
     List<League> leagues = new();
     League superLigaen;
     League nordicBetLigaen;
@@ -75,6 +76,7 @@ We did not use Named & Optional Parameters, but , for example, we could have use
     leagues.Add(league);
 
 But we could have:
+
     League league = new(name: values[0], 
                      score: Int32.Parse(values[1]), 
                      wins: Int32.Parse(values[2]), 
@@ -136,7 +138,7 @@ We did not use validation as we knew that the data that we were feeding the appl
 
 # Arrays / Collections
 We have used Lists through all the Project: Lists of Leagues and Lists of Teams. Each League has its own List of Teams, and then we create a couple more of Lists for dividing the League in two sections. We have not created Arrays, as Lists are a bit more flexible. In the case of this particular project, we could have used Arrays instead as the teams are always the same and so are the leagues.
-# For example, we used Lists in lines 6, 58, 250, etc. [WAITING]
+For example, we used Lists in lines 6, 58, 250, etc. [WAITING]
 
 # Ranges
 We have not used ranges in our project. The only place where we could have done so is Line [WAITING][ANDREA PLS PUSH SOON] while separating the List of Teams in two different arrays: 
