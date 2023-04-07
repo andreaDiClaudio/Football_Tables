@@ -1,0 +1,16 @@
+/*Question*/
+Can you help me create a formatted table in C# to display soccer league standings, including position, abbreviation, club name, games played, games won, games drawn, games lost, goals for, goals against, goal difference, points, and winning streak?
+
+/*Answer*/
+Certainly! Here's some C# code to generate a table with the requested columns
+Console.Write("+---------------------------------------------------------------------------------------------------------------------------+");
+    Console.Write("|{0,-4} | {1,-6} | {2,-25} | {3,-12} | {4,-9} | {5,-11} | {6,-9} | {7,-12} | {8,-13} | {9,-9} | {10,-8} | {11,-15}|",
+            "Pos", "Abbrev", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost", "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+        Console.Write("|{0,-4} | {1,-6} | {2,-25} | {3,-12} | {4,-9} | {5,-11} | {6,-9} | {7,-12} | {8,-13} | {9,-9} | {10,-8} | {11,-15}|",
+            "1", "ABC", "ABC Football Club", "10", "8", "1", "1", "25", "7", "18", "25", "W5");
+        Console.Write("|{0,-4} | {1,-6} | {2,-25} | {3,-12} | {4,-9} | {5,-11} | {6,-9} | {7,-12} | {8,-13} | {9,-9} | {10,-8} | {11,-15}|",
+            "2", "DEF", "DEF Football Club", "10", "7", "2", "1", "20", "8", "12", "23", "D2");
+        Console.Write("|{0,-4} | {1,-6} | {2,-25} | {3,-12} | {4,-9} | {5,-11} | {6,-9} | {7,-12} | {8,-13} | {9,-9} | {10,-8} | {11,-15}|",
+            "3", "GHI", "GHI Football Club", "10", "7", "1", "2", "18", "9", "9", "22", "L1");
+        Console.Write("+---------------------------------------------------------------------------------------------------------------------------+");
+    

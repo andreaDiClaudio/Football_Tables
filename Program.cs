@@ -49,7 +49,7 @@ internal class Program
             }
             */
 
-            ReadMatch(SuperLigaMatchesFolder, superLigaen);
+            //ReadMatch(SuperLigaMatchesFolder, superLigaen);
             ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
 
         }
@@ -261,15 +261,10 @@ internal class Program
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
 
-                    //print statmente wrapped in a if statement because terminal was to crowded
-                    if (counter == 126)
-                    {
-                        Console.WriteLine($"/*{league.Name} - Round n.22*/ ");
-                        PrintTable(league, league.Teams);
-                    }
 
                     if (counter > 131)
                     {
+
                         //The idea behind this was to save the general scorebord at match 22 and dived it into two boards. then i am doing the same as before, with the only difference that now the teams are displayed on the two boards. Not sure if this make sense. -Andrea 
                         if (counter == 132)
                         {
@@ -294,16 +289,21 @@ internal class Program
                         }
 
                     }
+                    if (counter % 6 == 0 && counter < 131) //Printing evey round as requested from the assignment TODO
+                    {
+                        PrintTable(league, league.Teams);
+                    }
+                    if (counter % 6 == 0 && counter > 131) //Printing evey round as requested from the assignment TODO
+                    {
+                        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
+                        PrintTable(league, league.UpperScoreboard);
+                        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
+                        PrintTable(league, league.LowerScoreboard);
+                    }
                     counter++; // the counter is here so that i have more control on the matches. Each file is composed by 6 iterations (because of 6 lines of matches and results) so i can decide better if i want triggere events at counter = 1 or at counter = 6 (which are in the same csv files) -Andrea
                 }
             }
         }
-        //prints the lists
-        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
-        PrintTable(league, league.UpperScoreboard);
-        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Final*/");
-        PrintTable(league, league.LowerScoreboard);
-
     }
 
     static void PrintTable(League league, List<Team> teams)
