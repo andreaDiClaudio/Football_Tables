@@ -80,8 +80,8 @@
 
 
 # Tuples, deconstruction
-#### We did not use Tuples in our code, we decided to use Classes instead. Classes are better for when you want to have additional behaviours or functionalities beyond holding data. We could have used Tuples, for example, in the Setup part of the project, and created a couple of Tuples for the Leagues. The League Class holds some properties that are read only. After creation, we don't need to modify the data at all. 
-#### We could have created the Tuple for Leagues like so:
+We did not use Tuples in our code, we decided to use Classes instead. Classes are better for when you want to have additional behaviours or functionalities beyond holding data. We could have used Tuples, for example, in the Setup part of the project, and created a couple of Tuples for the Leagues. The League Class holds some properties that are read only. After creation, we don't need to modify the data at all. 
+We could have created the Tuple for Leagues like so:
     (string Name, int ChampionsLeague, int EuropeLeague, int UpperLeague, int LowerLeague, List<Team>) league = ("values[0], Int32.Parse(values[1]), Int32.Parse(values[2]), Int32.Parse(values[3]), Int32.Parse(values[4]), new List<Team> {}");
 
 # Exceptions
