@@ -1,5 +1,5 @@
 # Type system
-#### Every variable and constant has a type, as does every expression that evaluates to a value. For example :
+Every variable and constant has a type, as does every expression that evaluates to a value. For example :
     List<League> leagues = new();
     League superLigaen;
     League nordicBetLigaen;
@@ -35,7 +35,7 @@ We did pattern matching while polishing the code. We are using pattern matching 
                 };
 
 # Classes, structs and enums
-In the projec we only have used classes for 'Team' and 'League'.
+In the project we only have used classes for 'Team' and 'League'.
 
 # Properties
 We used properties in the classe 'League.cs':
@@ -46,11 +46,11 @@ We used properties in the classe 'League.cs':
     public int LowerLeague { get; set; }
     public List<Team> Teams { get; set; }
 
-    //I added the following properties because so i can divide easily the league into twi sections -Andrea
     public List<Team> UpperScoreboard { get; set; }
     public List<Team> LowerScoreboard { get; set; }
 
 and also in the class 'Team.cs'
+
     public string Abbreviation { get; set; }
     public string FullName { get; set; }
     public string SpecialRanking { get; set; }
