@@ -1,0 +1,95 @@
+- Andrea Di Claudio
+/*QUESTION*/
+Can you convert the following code to 'Pattern Matching'
+
+if (league.Name == "Super Liga")
+
+ {
+
+Console.ForegroundColor = position switch
+
+ {
+
+1 => ConsoleColor.DarkYellow,
+
+2 => ConsoleColor.Magenta,
+
+_ => Console.ForegroundColor // fallback to the default color if position is not 1 or 2
+
+ };
+
+ }
+
+else
+
+ {
+
+if (teamNumber == 1 || teamNumber == 2)
+
+ {
+
+Console.ForegroundColor = ConsoleColor.Blue;
+
+ }
+
+ }
+
+//TODO Changed this so that it does not matter the size of the list, the last two position will be always red - Andrea
+
+/*Previous code:
+
+ if (teamNumber == 11 || teamNumber == 12)
+
+ */
+
+if (teamNumber == teams.Count - 0 || teamNumber == teams.Count - 1)
+
+ {
+
+Console.ForegroundColor = ConsoleColor.Red;
+
+ }
+
+--------------------
+/*ANSWER*/
+Yes, here's an example of how you could convert the code to use pattern matching:
+
+Console.ForegroundColor = (league.Name, position, teamNumber) switch
+{
+    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
+    ("Super Liga", 2, _) => ConsoleColor.Magenta,
+    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+    (_, _, var n) when n == teams.Count - 1 || n == teams.Count - 2 => ConsoleColor.Red,
+    _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
+};
+In this example, we are using pattern matching with tuples to determine the color to set the console foreground for each team. We are matching on three values: league.Name, position, and teamNumber.
+
+The first two cases match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league. The third case matches on the teamNumber value to set the foreground color for the first and second teams in any league that is not "Super Liga". The fourth case matches on the teamNumber value checking whether the team is in the last two positions of the league using the teams.Count property, and sets the foreground color to red.
+
+The _ pattern is used as a catch-all case to handle any other values that were not matched by the previous cases, and sets the foreground color to the default color.
+
+Note that pattern matching with tuples is only available in C# 7.0 and later. If you are using an earlier version of C#, you would need to use if-else statements to achieve the same behavior
+
+--------------------
+/*QUESTION*/
+When you set the color red, only the last two positions must be red. In the code you gave the third and second from last are red
+
+--------------------
+/*ANSWER*/
+You are correct, I apologize for the mistake in my previous response. Here is an updated code that sets the color red only for the last two positions:
+
+Console.ForegroundColor = (league.Name, position, teamNumber) switch
+{
+    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
+    ("Super Liga", 2, _) => ConsoleColor.Magenta,
+    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+    (_, _, var n) when n >= teams.Count - 1 => ConsoleColor.Red,
+    _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
+};
+In this updated code, we are using pattern matching with tuples to determine the color to set the console foreground for each team. We are matching on three values: league.Name, position, and teamNumber.
+
+The first two cases match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league. The third case matches on the teamNumber value to set the foreground color for the first and second teams in any league that is not "Super Liga". The fourth case matches on the teamNumber value checking whether the team is in the last two positions of the league using the teams.Count property, and sets the foreground color to red.
+
+The _ pattern is used as a catch-all case to handle any other values that were not matched by the previous cases, and sets the foreground color to the default color.
+
+I hope this updated code resolves the issue you pointed out.

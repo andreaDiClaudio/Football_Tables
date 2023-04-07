@@ -1,10 +1,34 @@
 ## Type system
+# Every variable and constant has a type, as does every expression that evaluates to a value. For example :
+    List<League> leagues = new();
+    League superLigaen;
+    League nordicBetLigaen;
 
 ## Null handling
+# We used the null coalescing operator to deal with nullable value types or reference types that may be null. Following there two example of how we implemented it:
+    Example 1:
+    string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
 
-## String interpolation
+    Example 2:
+    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}");
+
+## String Interpolation
+# We did use string interpolation for example when printing the league name above the scoreboard:
+    Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
+
+# or when throwing a new exception:
+    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}");
 
 ## Pattern Matching
+# We did pattern matching while polishing the code. We are using pattern matching in the method 'PrintTable()'. Following the example of pattern matching
+    Console.ForegroundColor = (league.Name, position, teamNumber) switch
+                {
+                    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
+                    ("Super Liga", 2, _) => ConsoleColor.Magenta,
+                    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+                    (_, _, var n) when n >= teams.Count - 1 => ConsoleColor.Red,
+                    _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
+                };
 
 ## Classes, structs and enums
 

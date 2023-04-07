@@ -3,7 +3,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        List<League> leagues = new List<League>();
+        List<League> leagues = new();
         League superLigaen;
         League nordicBetLigaen;
 
@@ -118,7 +118,7 @@ internal class Program
         // Add to Nordic Bet League List of Teams:
         if (File.Exists(nordicBetLigaPath))
         {
-            using (StreamReader reader = new StreamReader(nordicBetLigaPath))
+            using (StreamReader reader = new(nordicBetLigaPath))
             {
                 reader.ReadLine();
                 while (!reader.EndOfStream)
@@ -145,7 +145,7 @@ internal class Program
             string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
             foreach (string match in matchPath)
             {
-                using (StreamReader reader = new StreamReader(match))
+                using (StreamReader reader = new(match))
                 {
                     // Again, ignore first line in every file:
                     reader.ReadLine();
@@ -309,7 +309,7 @@ internal class Program
     static void PrintTable(League league, List<Team> teams)
     {
         //prints Table header
-        printTableHeader();
+        PrintTableHeader();
 
         //orders the teams
         teams = teams.OrderByDescending(team => team.Points)
@@ -334,32 +334,22 @@ internal class Program
             if (team.Points != prevPoints)
             {
                 // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
-                if (league.Name == "Super Liga")
+                //Changed to Pattern Matching TODO
+                Console.ForegroundColor = (league.Name, position, teamNumber) switch
                 {
-                    if (position == 1)
-                    {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    }
-                    else if (position == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                    }
-                }
-                else
-                {
-                    if (teamNumber == 1 || teamNumber == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    }
-                }
-                //TODO Changed this so that it does not matter the size of the list, the last two position will be always red - Andrea
-                /*Previous code:
-                 if (teamNumber == 11 || teamNumber == 12)
-                */
-                if (teamNumber == teams.Count - 0 || teamNumber == teams.Count - 1)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
+                    //match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league
+                    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
+
+                    //match on the league.Name and position values to set the foreground color for the top two teams in the "Super Liga" league
+                    ("Super Liga", 2, _) => ConsoleColor.Magenta,
+
+                    //matches on the teamNumber value to set the foreground color for the first and second teams in any league that is not "Super Liga". 
+                    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+
+                    //matches on the teamNumber value checking whether the team is in the last two positions of the league using the teams.Count property
+                    (_, _, var n) when n >= teams.Count - 1 => ConsoleColor.Red,
+                    _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
+                };
                 // Assign the team the next available position
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
                 position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
@@ -383,11 +373,11 @@ internal class Program
         }
 
         // Prints the table footer
-        printTableFooter();
+        PrintTableFooter();
     }
 
     //Prints the table header
-    static void printTableHeader()
+    static void PrintTableHeader()
     {
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
         Console.Write("|");
@@ -399,7 +389,7 @@ internal class Program
     }
 
     // Prints the table footer
-    static void printTableFooter()
+    static void PrintTableFooter()
     {
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
         Console.WriteLine();
