@@ -254,6 +254,21 @@ internal class Program
                         teamAway.GamesTied++;
                         teamHome.Points += 1;
                         teamAway.Points += 1;
+
+                        teamAway.WinningStreak.Enqueue("T");
+                        if (teamAway.WinningStreak.Count > 5)
+                        {
+                            teamAway.WinningStreak.Dequeue();
+                        }
+
+                        teamHome.WinningStreak.Enqueue("T");
+                        if (teamHome.WinningStreak.Count > 5)
+                        {
+                            teamHome.WinningStreak.Dequeue();
+                        }
+
+
+
                     }
 
                     teamHome.GoalsFor += homeResult;
