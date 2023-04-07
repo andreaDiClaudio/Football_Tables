@@ -1,10 +1,17 @@
 ## Type system
+
 ## Null handling
+
 ## String interpolation
+
 ## Pattern Matching
+
 ## Classes, structs and enums
+
 ## Properties
+
 ## Named & optional parameters
+
 
 ## Tuples, deconstruction
 # We did not use Tuples in our code, we decided to use Classes instead. Classes are better for when you want to have additional behaviours or functionalities beyond holding data. We could have used Tuples, for example, in the Setup part of the project, and created a couple of Tuples for the Leagues. The League Class holds some properties that are read only. After creation, we don't need to modify the data at all. 
@@ -54,6 +61,5 @@
 # We have not used ranges in our project. The only place where we could have done so is Line [WAITING][ANDREA PLS PUSH SOON] while separating the List of Teams in two different arrays: 
     List<Team> upperLeague = ordered[0..6];
     List<Team> lowerLeague = superLiga.Team[7..12];
-## Generics
 
 # We have not used Generics in this project. The main point about Generics as we understand it is to create Reusable bits of code. While we know and understand that this can be useful, we could not find any place in our code where we could have benefitted from using Generics. It would only make the code less self-explanatory in our opinion. 

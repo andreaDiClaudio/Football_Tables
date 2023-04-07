@@ -6,10 +6,8 @@ internal class Program
         List<League> leagues = new List<League>();
         League superLigaen;
         League nordicBetLigaen;
-
         string SuperLigaMatchesFolder = "./csv/superliga_matches";
         string NordicBetLigaMatchesFolder = "./csv/nordicbetliga_matches";
-
         try
         {
             // Create Leagues, adds them to a List, and saves it:
@@ -21,28 +19,26 @@ internal class Program
             // We can now start working with it.
             superLigaen = leagues[0];
             nordicBetLigaen = leagues[1];
-
             // CSV FILE VALIDATION:
             ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
             ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
-            // This works! =)
             List<Team> orderedSuperLiga = superLigaen.Teams.OrderByDescending(team => team.Points)
-                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
-                                    .ThenByDescending(team => team.GoalsFor)
-                                    .ThenBy(team => team.GoalsAgainst)
-                                    .ThenBy(team => team.FullName)
-                                    .ToList();
+                                                 .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                                 .ThenByDescending(team => team.GoalsFor)
+                                                 .ThenBy(team => team.GoalsAgainst)
+                                                 .ThenBy(team => team.FullName)
+                                                 .ToList();
 
             List<Team> orderedNordicBetLiga = nordicBetLigaen.Teams.OrderByDescending(team => team.Points)
-                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
-                                    .ThenByDescending(team => team.GoalsFor)
-                                    .ThenBy(team => team.GoalsAgainst)
-                                    .ThenBy(team => team.FullName)
-                                    .ToList();
+                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                     .ThenByDescending(team => team.GoalsFor)
+                                     .ThenBy(team => team.GoalsAgainst)
+                                     .ThenBy(team => team.FullName)
+                                     .ToList();
 
-            ReadMatch(SuperLigaMatchesFolder, superLigaen);
-            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
+            ReadMatch(SuperLigaMatchesFolder, superLigaen); //Refactor name?
+            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor name?
 
         }
         catch (Exception e)
@@ -82,7 +78,6 @@ internal class Program
             throw new FileNotFoundException();
         }
     }
-
     public static void LoadTeams(string superLigaPath, string nordicBetLigaPath, List<League> leagues)
     {
         // Add to Super Liga List of Teams:
@@ -126,7 +121,6 @@ internal class Program
             throw new FileNotFoundException();
         }
     }
-
     // A method to read match data from CSV files and update the league standings.
     public static void ReadMatch(string csvFolder, League league)
     {
@@ -199,10 +193,6 @@ internal class Program
                     teamAway.GoalsFor += awayResult;
                     teamHome.GoalsAgainst += awayResult;
                     teamAway.GoalsAgainst += homeResult;
-
-                    // Print the league standings after each match
-                    Console.WriteLine($"/*{league.Name}*/");
-                    PrintTable(league);
                     //Console.WriteLine($"/*{league.Name}*/"); 
                     //PrintTable(league); 
                 }
@@ -210,7 +200,7 @@ internal class Program
             PrintTable(league);
         }
     }
-
+    // Read all the .csv files to check if the info inside is OK:
     public static void ValidateMatches(string csvFolder, List<Team> teams)
     {
         if (Directory.Exists(csvFolder))
@@ -266,7 +256,6 @@ internal class Program
             int difference = team.GoalsFor - team.GoalsAgainst;
             string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
-
             // Check if the team has the same points as the previous team
             // Nico: I fixed this. It just has to check if current team has the same number of points as previous team.
             if (team.Points != prevPoints)
