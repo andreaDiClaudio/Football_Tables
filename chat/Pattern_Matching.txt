@@ -34,8 +34,6 @@ Console.ForegroundColor = ConsoleColor.Blue;
 
  }
 
-//TODO Changed this so that it does not matter the size of the list, the last two position will be always red - Andrea
-
 /*Previous code:
 
  if (teamNumber == 11 || teamNumber == 12)

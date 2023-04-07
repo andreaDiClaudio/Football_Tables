@@ -31,10 +31,52 @@
                 };
 
 # Classes, structs and enums
+## In the projec we only have used classes for 'Team' and 'League'.
 
 # Properties
+## We used properties in the classe 'League.cs':
+    public string Name { get; set; }
+    public int ChampionsLeague { get; set; }
+    public int EuropeLeague { get; set; }
+    public int UpperLeague { get; set; }
+    public int LowerLeague { get; set; }
+    public List<Team> Teams { get; set; }
+
+    //I added the following properties because so i can divide easily the league into twi sections -Andrea
+    public List<Team> UpperScoreboard { get; set; }
+    public List<Team> LowerScoreboard { get; set; }
+
+## and also in the class 'Team.cs'
+    public string Abbreviation { get; set; }
+    public string FullName { get; set; }
+    public string SpecialRanking { get; set; }
+    public int GamesPlayed { get; set;}
+    public int GamesWon { get; set; }
+    public int GamesLost { get; set; }
+    public int GamesTied { get; set; }
+    public int GoalsFor { get; set; }
+    public int GoalsAgainst { get; set; }
+    public int Points { get; set; }
+    public Queue<string> WinningStreak { get; set; }
 
 # Named & optional parameters
+## We did not use Named & Optional Parameters, but , for example, we could have use it inside the 'SetUp()' method where now we have:
+    League league = new(values[0], 
+                    Int32.Parse(values[1]), 
+                    Int32.Parse(values[2]), 
+                    Int32.Parse(values[3]), 
+                    Int32.Pars(values[4]));
+
+    leagues.Add(league);
+
+## But we could have:
+    League league = new(name: values[0], 
+                     score: Int32.Parse(values[1]), 
+                     wins: Int32.Parse(values[2]), 
+                     losses: Int32.Parse(values[3]), 
+                     draws: Int32.Parse(values[4]));
+
+    leagues.Add(league);
 
 
 # Tuples, deconstruction
