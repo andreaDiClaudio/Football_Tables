@@ -293,9 +293,9 @@ internal class Program
                     if (counter % 6 == 0 && counter > 131) //Printing evey round as requested from the assignment 
                     {
                         Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
-                        PrintTable(league, league.UpperScoreboard);
+                        PrintTableUpper(league, league.UpperScoreboard);
                         Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
-                        PrintTable(league, league.LowerScoreboard);
+                        PrintTableLower(league, league.LowerScoreboard);
                     }
                     counter++; // the counter is here so that i have more control on the matches. Each file is composed by 6 iterations (because of 6 lines of matches and results) so i can decide better if i want triggere events at counter = 1 or at counter = 6 (which are in the same csv files) -Andrea
                 }
@@ -328,40 +328,39 @@ internal class Program
             string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
 
-            // Check if the team has the same points as the previous or next team
-            if (team.Points != prevPoints)
+            
+            // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
+            //Changed to Pattern Matching TODO
+            if (league.Name == "Super Liga")
             {
-                // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
-                //Changed to Pattern Matching TODO
-                if (league.Name == "Super Liga")
-                {
                     if (teamNumber == 1)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                     }
                     else if (teamNumber == 2)
                     {
                         Console.ForegroundColor = ConsoleColor.Magenta;
                     }
-                }
-                else
+            }
+            else
+            {
+                if (teamNumber == 1 || teamNumber == 2)
                 {
-                    if (teamNumber == 1 || teamNumber == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    }
+                    Console.ForegroundColor = ConsoleColor.Blue;
                 }
-                if (teamNumber == 11 || teamNumber == 12)
-                {
-                    Console.WriteLine(teamNumber);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                }
+            }
+            if (teamNumber == 11 || teamNumber == 12)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints)
+            {
                 // Assign the team the next available position
                 Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
                 position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
                 team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
-
-                Console.ResetColor();
                 position++;
             }
             else
@@ -371,9 +370,145 @@ internal class Program
                 "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
                 team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
             }
+            Console.ResetColor();
             Console.Write("|");
             Console.WriteLine();
             prevPoints = team.Points;
+            
+        }
+
+        // Prints the table footer
+        PrintTableFooter();
+    }
+
+    static void PrintTableUpper(League league, List<Team> teams)
+    {
+        //prints Table header
+        PrintTableHeader();
+
+        //orders the teams
+        teams = teams.OrderByDescending(team => team.Points)
+            .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+            .ThenByDescending(team => team.GoalsFor)
+            .ThenBy(team => team.GoalsAgainst)
+            .ThenBy(team => team.FullName)
+            .ToList();
+
+        // Assign positions to each team based on their sorted order, checking for the same position
+        int position = 1;
+        int prevPoints = -1;
+        int teamNumber = 0;
+        for (int i = 0; i < teams.Count; i++)
+        {
+            teamNumber++;
+            Team team = teams[i];
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
+            Console.Write("|");
+
+            
+            // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
+            //Changed to Pattern Matching TODO
+            if (league.Name == "Super Liga")
+            {
+                    if (teamNumber == 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+                    else if (teamNumber == 2)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                    }
+            }
+            else
+            {
+                if (teamNumber == 1 || teamNumber == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+            }
+
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints)
+            {
+                // Assign the team the next available position
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
+            }
+            else
+            {
+                // Assign the team a position of '-'
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            }
+            Console.ResetColor();
+            Console.Write("|");
+            Console.WriteLine();
+            prevPoints = team.Points;
+            
+        }
+
+        // Prints the table footer
+        PrintTableFooter();
+    }
+
+    static void PrintTableLower(League league, List<Team> teams)
+    {
+        //prints Table header
+        PrintTableHeader();
+
+        //orders the teams
+        teams = teams.OrderByDescending(team => team.Points)
+            .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+            .ThenByDescending(team => team.GoalsFor)
+            .ThenBy(team => team.GoalsAgainst)
+            .ThenBy(team => team.FullName)
+            .ToList();
+
+        // Assign positions to each team based on their sorted order, checking for the same position
+        int position = 1;
+        int prevPoints = -1;
+        int teamNumber = 0;
+        for (int i = 0; i < teams.Count; i++)
+        {
+            teamNumber++;
+            Team team = teams[i];
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
+            Console.Write("|");
+
+            
+            // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
+            //Changed to Pattern Matching TODO
+            if (teamNumber == 5 || teamNumber == 6)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints)
+            {
+                // Assign the team the next available position
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
+            }
+            else
+            {
+                // Assign the team a position of '-'
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            }
+            Console.ResetColor();
+            Console.Write("|");
+            Console.WriteLine();
+            prevPoints = team.Points;
+            
         }
 
         // Prints the table footer
