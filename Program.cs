@@ -10,11 +10,6 @@ internal class Program
         string SuperLigaMatchesFolder = "./csv/superliga_matches";
         string NordicBetLigaMatchesFolder = "./csv/nordicbetliga_matches";
 
-        //List for the first six positions in the scoreboard
-        List<Team> upperScoreoard = new List<Team>();
-        //List for the last six positions in the scoreboard
-        List<Team> lowerScoreoard = new List<Team>();
-
         try
         {
             // Create Leagues, adds them to a List, and saves it:
@@ -181,8 +176,8 @@ internal class Program
     public static void ReadMatch(string csvFolder, League league)
     {
         int counter = 1;
-        List<Team> upperScoreboard = new();
-        List<Team> lowerScoreboard = new();
+        //List<Team> upperScoreboard = new();
+        //List<Team> lowerScoreboard = new();
 
         if (Directory.Exists(csvFolder))
         {
@@ -279,7 +274,7 @@ internal class Program
                         if (counter == 132)
                         {
                             //saves the first 6 poistion in the list
-                            upperScoreboard = league.Teams
+                            league.UpperScoreboard = league.Teams
                                     .OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
@@ -287,7 +282,7 @@ internal class Program
                                     .ThenBy(team => team.FullName)
                                     .Take(6).ToList();
                             //saves the last 6 poistion in the list
-                            lowerScoreboard = league.Teams
+                            league.LowerScoreboard = league.Teams
                                     .OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
@@ -305,9 +300,9 @@ internal class Program
         }
         //prints the lists
         Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
-        PrintTable(league, upperScoreboard);
+        PrintTable(league, league.UpperScoreboard);
         Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Final*/");
-        PrintTable(league, lowerScoreboard);
+        PrintTable(league, league.LowerScoreboard);
 
     }
 
