@@ -136,7 +136,6 @@ internal class Program
         }
     }
 
-
     // Read all the .csv files to check if the info inside is OK:
     public static void ValidateMatches(string csvFolder, List<Team> teams)
     {
@@ -308,20 +307,16 @@ internal class Program
 
     static void PrintTable(League league, List<Team> teams)
     {
+        //prints Table header
+        printTableHeader();
+
+        //orders the teams
         teams = teams.OrderByDescending(team => team.Points)
             .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
             .ThenByDescending(team => team.GoalsFor)
             .ThenBy(team => team.GoalsAgainst)
             .ThenBy(team => team.FullName)
             .ToList();
-        //Prints the table header
-        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
-        Console.Write("|");
-        Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-        "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
-        "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
-        Console.Write("|");
-        Console.WriteLine();
 
         // Assign positions to each team based on their sorted order, checking for the same position
         int position = 1;
@@ -356,7 +351,7 @@ internal class Program
                         Console.ForegroundColor = ConsoleColor.Blue;
                     }
                 }
-                //Changed this so that it does not matter the size of the list, the last two position will be always red - Andrea
+                //TODO Changed this so that it does not matter the size of the list, the last two position will be always red - Andrea
                 /*Previous code:
                  if (teamNumber == 11 || teamNumber == 12)
                 */
@@ -387,8 +382,25 @@ internal class Program
         }
 
         // Prints the table footer
+        printTableFooter();
+    }
+
+    //Prints the table header
+    static void printTableHeader()
+    {
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+        Console.Write("|");
+        Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+        "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
+        "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+        Console.Write("|");
         Console.WriteLine();
     }
 
+    // Prints the table footer
+    static void printTableFooter()
+    {
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+        Console.WriteLine();
+    }
 }
