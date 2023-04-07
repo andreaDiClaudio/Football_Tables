@@ -1,6 +1,6 @@
 internal class Program
 {
-    
+
     private static void Main(string[] args)
     {
         List<League> leagues = new List<League>();
@@ -10,7 +10,12 @@ internal class Program
         string SuperLigaMatchesFolder = "./csv/superliga_matches";
         string NordicBetLigaMatchesFolder = "./csv/nordicbetliga_matches";
 
-        try 
+        //List for the first six positions in the scoreboard
+        List<Team> upperScoreoard = new List<Team>();
+        //List for the last six positions in the scoreboard
+        List<Team> lowerScoreoard = new List<Team>();
+
+        try
         {
             // Create Leagues, adds them to a List, and saves it:
             leagues = Setup();
@@ -23,8 +28,8 @@ internal class Program
             nordicBetLigaen = leagues[1];
 
             // CSV FILE VALIDATION:
-             ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
-             ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
+            ValidateMatches(SuperLigaMatchesFolder, superLigaen.Teams);
+            ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
             // This works! =)
             List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
@@ -36,17 +41,18 @@ internal class Program
 
             foreach (Team team in ordered)
             {
-                //Console.WriteLine(team.ToString()); TODO PUT IT BACK IN
+                //Console.WriteLine(team.ToString()); //I commented out this -A
             }
-            
-            ReadMatch( SuperLigaMatchesFolder,superLigaen); //Refactor name?
-            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor name?
-          
-        } catch (Exception e)
+
+            ReadMatch(SuperLigaMatchesFolder, superLigaen);
+            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
+
+        }
+        catch (Exception e)
         {
             Console.WriteLine(e);
         }
-        
+
     }
 
     public static List<League> Setup()
@@ -73,7 +79,8 @@ internal class Program
                 }
             }
             return leagues;
-        } else 
+        }
+        else
         {
             Console.WriteLine("Error reading the setup.csv file. Maybe it changed places?");
             throw new FileNotFoundException();
@@ -96,7 +103,8 @@ internal class Program
                     leagues[0].Teams.Add(team);
                 }
             }
-        } else 
+        }
+        else
         {
             Console.WriteLine("Error reading the Super Liga file. Maybe it changed places?");
             throw new FileNotFoundException();
@@ -116,168 +124,292 @@ internal class Program
                     leagues[1].Teams.Add(team);
                 }
             }
-        } else 
+        }
+        else
         {
             Console.WriteLine("Error reading the Nordic Bet Liga file. Maybe it changed places?");
             throw new FileNotFoundException();
         }
     }
 
-    // A method to read match data from CSV files and update the league standings.
-    public static void ReadMatch(string csvFolder, League league) {
 
-    if (Directory.Exists(csvFolder)) {
-        // Get all CSV files in the specified folder
-        string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
-        // Process each CSV file
-        foreach (string match in matchPath) {
-            using StreamReader reader = new(match);
-            // Skip the first line (header row)
-            reader.ReadLine();
-            // Process each line of the CSV file
-            while (!reader.EndOfStream) {
-
-                // Read a line from the CSV file and split it into an array of values
-                string line = reader.ReadLine();
-                string[] values = line.Split(",");
-                // Split the third value (match result) into home and away scores
-                string[] result = values[2].Split("-");
-                int homeResult = int.Parse(result[0]); 
-                int awayResult = int.Parse(result[1]);
-
-                // Find the home and away teams in the league by their abbreviations
-                Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]); 
-                Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
-
-                // Update the teams' standings based on the match result
-                teamHome.GamesPlayed++; 
-                teamAway.GamesPlayed++;
-
-                if (homeResult > awayResult) {
-                    teamHome.GamesWon++; 
-                    teamAway.GamesLost++;
-                    teamHome.Points += 3;
-                    teamHome.WinningStreak.Enqueue("W"); 
-                    if (teamHome.WinningStreak.Count > 5) { 
-                        teamHome.WinningStreak.Dequeue(); 
-                    }
-                    teamAway.WinningStreak.Enqueue("L"); 
-                    if (teamAway.WinningStreak.Count > 5) {
-                        teamAway.WinningStreak.Dequeue(); 
-                    }
-                } 
-                else if (homeResult < awayResult) {
-                    teamAway.GamesWon++; 
-                    teamHome.GamesLost++; 
-                    teamAway.Points += 3;
-                    teamHome.WinningStreak.Enqueue("L"); 
-                    if (teamHome.WinningStreak.Count > 5) { 
-                        teamHome.WinningStreak.Dequeue(); 
-                    }
-                    teamAway.WinningStreak.Enqueue("W"); 
-                    if (teamAway.WinningStreak.Count > 5) {
-                        teamAway.WinningStreak.Dequeue(); 
-                    }
-                }    
-                else 
+    // Read all the .csv files to check if the info inside is OK:
+    public static void ValidateMatches(string csvFolder, List<Team> teams)
+    {
+        if (Directory.Exists(csvFolder))
+        {
+            string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
+            foreach (string match in matchPath)
+            {
+                using (StreamReader reader = new StreamReader(match))
                 {
-                    teamHome.GamesTied++; 
-                    teamAway.GamesTied++;
-                    teamHome.Points += 1; 
-                    teamAway.Points += 1; 
-                }
-
-                teamHome.GoalsFor += homeResult; 
-                teamAway.GoalsFor += awayResult;
-                teamHome.GoalsAgainst += awayResult; 
-                teamAway.GoalsAgainst += homeResult;
-
-                // Print the league standings after each match
-                Console.WriteLine($"/*{league.Name}*/"); 
-                PrintTable(league); 
+                    // Again, ignore first line in every file:
+                    reader.ReadLine();
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] values = line.Split(",");
+                        Team teamA = teams.Find(team => team.Abbreviation == values[0]);
+                        Team teamB = teams.Find(team => team.Abbreviation == values[1]);
+                        if (teamA == null || teamB == null)
+                        {
+                            Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
+                            throw new Exception();
+                        }
+                    }
                 }
             }
         }
-    }
-    // Read all the .csv files to check if the info inside is OK:
-        public static void ValidateMatches(string csvFolder, List<Team> teams)
-        {
-            if (Directory.Exists(csvFolder))
-            {
-                string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
-                foreach (string match in matchPath)
-                {
-                    using (StreamReader reader = new StreamReader(match))
-                    {
-                        // Again, ignore first line in every file:
-                        reader.ReadLine();
-                        while (!reader.EndOfStream)
-                        {
-                            string line = reader.ReadLine();
-                            string[] values = line.Split(",");
-                            Team teamA = teams.Find(team => team.Abbreviation == values[0]);
-                            Team teamB = teams.Find(team => team.Abbreviation == values[1]);
-                            if (teamA == null || teamB == null)
-                            {
-                                Console.WriteLine(values[0] + " or " + values[1] + " in file: " + match + " does not exist as a team.");
-                                throw new Exception();
-                            }
-                        }
-                    }
-                }         
-            } 
-            else 
-            {
-                Console.WriteLine("No such directory.");
-                throw new DirectoryNotFoundException();
-             }
-         }
-     
-    static void PrintTable(League league) {
-    //Prints the table header
-    Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
-    Console.Write("|");
-    Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-    "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
-    "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
-    Console.Write("|");
-    Console.WriteLine();
-
-    // Sort the teams by points in descending order
-    List<Team> sortedTeams = league.Teams.OrderByDescending(t => t.Points).ToList();
-
-    // Assign positions to each team based on their sorted order, checking for the same position
-    int position = 1;
-    int prevPoints = -1;
-    for (int i = 0; i < sortedTeams.Count; i++)
-    {
-        Team team = sortedTeams[i];
-        int difference = team.GoalsFor - team.GoalsAgainst;
-        string winningStreak = string.Join("|", team.WinningStreak);
-        Console.Write("|");
-
-        // Check if the team has the same points as the previous or next team
-        if (team.Points != prevPoints && (i == sortedTeams.Count - 1 || team.Points != sortedTeams[i + 1].Points))
-        {
-            // Assign the team the next available position
-            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-            position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
-            team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
-            position++;
-        }
         else
         {
-            // Assign the team a position of '-'
-            Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
-            "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
-            team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+            Console.WriteLine("No such directory.");
+            throw new DirectoryNotFoundException();
         }
-        Console.Write("|");
-        Console.WriteLine();
-        prevPoints = team.Points;
     }
 
-    // Prints the table footer
-    Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+    // A method to read match data from CSV files and update the league.
+    public static void ReadMatch(string csvFolder, League league)
+    {
+        int counter = 1;
+        List<Team> upperScoreboard = new();
+        List<Team> lowerScoreboard = new();
+
+        if (Directory.Exists(csvFolder))
+        {
+            // Get all CSV files in the specified folder
+            string[] matchPath = Directory.GetFiles(csvFolder, "*.csv");
+
+            // Process each CSV file
+            foreach (string match in matchPath)
+            {
+                using StreamReader reader = new(match);
+
+                //Skip the first line (header row)
+                reader.ReadLine();
+
+                //Process each line of the CSV file
+                while (!reader.EndOfStream)
+                {
+                    // Read a line from the CSV file and split it into an array of values
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(",");
+
+                    // Split the third value (match result) into home and away scores
+                    string[] result = values[2].Split("-");
+                    int homeResult = int.Parse(result[0]);
+                    int awayResult = int.Parse(result[1]);
+
+                    // Find the home and away teams in the league by their abbreviations
+                    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]);
+                    Team teamAway = league.Teams.Find(team => team.Abbreviation == values[1]);
+
+                    // Update the teams' info based on the match result
+                    teamHome.GamesPlayed++;
+                    teamAway.GamesPlayed++;
+
+                    if (homeResult > awayResult)
+                    {
+                        teamHome.GamesWon++;
+                        teamAway.GamesLost++;
+                        teamHome.Points += 3;
+
+                        teamHome.WinningStreak.Enqueue("W");
+                        if (teamHome.WinningStreak.Count > 5)
+                        {
+                            teamHome.WinningStreak.Dequeue();
+                        }
+
+                        teamAway.WinningStreak.Enqueue("L");
+                        if (teamAway.WinningStreak.Count > 5)
+                        {
+                            teamAway.WinningStreak.Dequeue();
+                        }
+                    }
+                    else if (homeResult < awayResult)
+                    {
+                        teamAway.GamesWon++;
+                        teamHome.GamesLost++;
+                        teamAway.Points += 3;
+
+                        teamHome.WinningStreak.Enqueue("L");
+                        if (teamHome.WinningStreak.Count > 5)
+                        {
+                            teamHome.WinningStreak.Dequeue();
+                        }
+
+                        teamAway.WinningStreak.Enqueue("W");
+                        if (teamAway.WinningStreak.Count > 5)
+                        {
+                            teamAway.WinningStreak.Dequeue();
+                        }
+                    }
+                    else
+                    {
+                        teamHome.GamesTied++;
+                        teamAway.GamesTied++;
+                        teamHome.Points += 1;
+                        teamAway.Points += 1;
+                    }
+
+                    teamHome.GoalsFor += homeResult;
+                    teamAway.GoalsFor += awayResult;
+                    teamHome.GoalsAgainst += awayResult;
+                    teamAway.GoalsAgainst += homeResult;
+
+                    //print statmente wrapped in a if statement because terminal was to crowded
+                    if (counter == 126)
+                    {
+                        Console.WriteLine($"/*{league.Name} - Round n.22*/ ");
+                        PrintTable(league);
+                    }
+
+                    if (counter > 131)
+                    {
+                        //The idea behind this was to save the general scorebord at match 22 and dived it into two boards. then i am doing the same as before, with the only difference that now the teams are displayed on the two boards. Not sure if this make sense. -Andrea 
+                        if (counter == 132)
+                        {
+                            //saves the first 6 poistion in the list
+                            upperScoreboard = league.Teams
+                                    .OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .Take(6).ToList();
+                            //saves the last 6 poistion in the list
+                            lowerScoreboard = league.Teams
+                                    .OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .Skip(6)
+                                    .Take(6)
+                                    .ToList();
+                        }
+
+                    }
+                    counter++; // the counter is here so that i have more control on the matches. Each file is composed by 6 iterations (because of 6 lines of matches and results) so i can decide better if i want triggere events at counter = 1 or at counter = 6 (which are in the same csv files) -Andrea
+                }
+            }
+        }
+        //prints the lists
+        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Final*/");
+        printDividedTable(upperScoreboard);
+        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Final*/");
+        printDividedTable(lowerScoreboard);
+
     }
+
+    static void PrintTable(League league)
+    {
+        //Prints the table header
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+        Console.Write("|");
+        Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+        "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
+        "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+        Console.Write("|");
+        Console.WriteLine();
+
+        // Sort the teams by points in descending order
+        List<Team> sortedTeams = league.Teams.OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList(); ;
+
+        // Assign positions to each team based on their sorted order, checking for the same position
+        int position = 1;
+        int prevPoints = -1;
+        for (int i = 0; i < sortedTeams.Count; i++)
+        {
+            Team team = sortedTeams[i];
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
+            Console.Write("|");
+
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints)
+            {
+                // Assign the team the next available position
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                //Divides the scoreboard in two arrays
+                position++;
+            }
+            else
+            {
+                // Assign the team a position of '-'
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
+            }
+            Console.Write("|");
+            Console.WriteLine();
+            prevPoints = team.Points;
+        }
+
+        // Prints the table footer
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+    }
+
+    static void printDividedTable(List<Team> teams)
+    {
+        teams = teams.OrderByDescending(team => team.Points)
+            .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+            .ThenByDescending(team => team.GoalsFor)
+            .ThenBy(team => team.GoalsAgainst)
+            .ThenBy(team => team.FullName)
+            .ToList();
+        //Prints the table header
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+        Console.Write("|");
+        Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-9} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+        "Pos", "Abbrev", "Mark", "Club-Name", "Games-Played", "Games-Won", "Games-Drawn", "Games-Lost",
+        "Goals-For", "Goals-Against", "Goal-Diff", "Points", "Winning-Streak");
+        Console.Write("|");
+        Console.WriteLine();
+
+        // Assign positions to each team based on their sorted order, checking for the same position
+        int position = 1;
+        int prevPoints = -1;
+        for (int i = 0; i < teams.Count; i++)
+        {
+            Team team = teams[i];
+            int difference = team.GoalsFor - team.GoalsAgainst;
+            string winningStreak = string.Join("|", team.WinningStreak);
+            Console.Write("|");
+
+            // Check if the team has the same points as the previous or next team
+            if (team.Points != prevPoints)
+            {
+                // Assign the team the next available position
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                position, team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                //Divides the scoreboard in two arrays
+                position++;
+            }
+            else
+            {
+                // Assign the team a position of '-'
+                Console.Write("{0,-4} {1,-6} {2,-5} {3,-25} {4,-12} {5,-9} {6,-11} {7,-10} {8,-12} {9,-13} {10,-9} {11,-8} {12,-15}",
+                "-", team.Abbreviation, team.SpecialRanking, team.FullName, team.GamesPlayed, team.GamesWon, team.GamesTied, team.GamesLost,
+                team.GoalsFor, team.GoalsAgainst, difference, team.Points, winningStreak);
+                position++;
+            }
+            Console.Write("|");
+            Console.WriteLine();
+            prevPoints = team.Points;
+        }
+
+        // Prints the table footer
+        Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
+    }
+
+
 }
