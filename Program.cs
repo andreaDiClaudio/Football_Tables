@@ -32,7 +32,7 @@ internal class Program
             ValidateMatches(NordicBetLigaMatchesFolder, nordicBetLigaen.Teams);
 
             // This works! =)
-            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points) //TODO pass this in the readMatch
+            List<Team> ordered = superLigaen.Teams.OrderByDescending(team => team.Points)
                                     .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
                                     .ThenByDescending(team => team.GoalsFor)
                                     .ThenBy(team => team.GoalsAgainst)
@@ -44,8 +44,8 @@ internal class Program
                 //Console.WriteLine(team.ToString()); //I commented out this -A
             }
 
-            //ReadMatch(SuperLigaMatchesFolder, superLigaen); //Refactor method name? It is commente ou because of terminal too crowded -Andrea
-            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen); //Refactor method name? -Andrea
+            ReadMatch(SuperLigaMatchesFolder, superLigaen);
+            ReadMatch(NordicBetLigaMatchesFolder, nordicBetLigaen);
 
         }
         catch (Exception e)
@@ -257,9 +257,9 @@ internal class Program
                     teamAway.GoalsAgainst += homeResult;
 
                     //print statmente wrapped in a if statement because terminal was to crowded
-                    if (counter == 6 || counter == 60 || counter == 120 || counter == 131)
+                    if (counter == 126)
                     {
-                        Console.WriteLine($"/*{league.Name} - Iteration n.{counter}*/ ");
+                        Console.WriteLine($"/*{league.Name} - Round n.22*/ ");
                         PrintTable(league);
                     }
 
@@ -268,22 +268,24 @@ internal class Program
                         //The idea behind this was to save the general scorebord at match 22 and dived it into two boards. then i am doing the same as before, with the only difference that now the teams are displayed on the two boards. Not sure if this make sense. -Andrea 
                         if (counter == 132)
                         {
-                            //saves the first 6 poistion in the list //TODO copy and past nico's method for ordering line 35
-                            upperScoreboard = league.Teams.OrderByDescending(team => team.Points).Take(6).ToList();
+                            //saves the first 6 poistion in the list
+                            upperScoreboard = league.Teams
+                                    .OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .Take(6).ToList();
                             //saves the last 6 poistion in the list
-                            lowerScoreboard = league.Teams.OrderByDescending(team => team.Points).Skip(6).Take(6).ToList();
-                        }
-
-                        //print statmente wrapped in a if statement because terminal was to crowded
-                        if (counter == 132 || counter == 138)
-                        {
-                            //prints the lists
-                            Console.WriteLine();
-                            Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD - Iteration n.{counter}*/");
-                            printDividedTable(upperScoreboard);
-                            Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD - Iteration n.{counter}*/");
-                            printDividedTable(lowerScoreboard);
-                            Console.WriteLine();
+                            lowerScoreboard = league.Teams
+                                    .OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .Skip(6)
+                                    .Take(6)
+                                    .ToList();
                         }
 
                     }
@@ -311,7 +313,12 @@ internal class Program
         Console.WriteLine();
 
         // Sort the teams by points in descending order
-        List<Team> sortedTeams = league.Teams.OrderByDescending(t => t.Points).ToList();
+        List<Team> sortedTeams = league.Teams.OrderByDescending(team => team.Points)
+                                    .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+                                    .ThenByDescending(team => team.GoalsFor)
+                                    .ThenBy(team => team.GoalsAgainst)
+                                    .ThenBy(team => team.FullName)
+                                    .ToList(); ;
 
         // Assign positions to each team based on their sorted order, checking for the same position
         int position = 1;
@@ -350,9 +357,14 @@ internal class Program
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
     }
 
-    //Maybe can be Merged in the method 'printTable'.At the moment i need it because in the method 'printTable()' i am passing a league as argument. Here i am passing a list of teams (it is called in the 'readMatch() after diving the scoreboard into two). -Andrea 
     static void printDividedTable(List<Team> teams)
     {
+        teams = teams.OrderByDescending(team => team.Points)
+            .ThenByDescending(team => (team.GoalsFor - team.GoalsAgainst))
+            .ThenByDescending(team => team.GoalsFor)
+            .ThenBy(team => team.GoalsAgainst)
+            .ThenBy(team => team.FullName)
+            .ToList();
         //Prints the table header
         Console.WriteLine("+-------------------------------------------------------------------------------------------------------------------------------------------------------+");
         Console.Write("|");
