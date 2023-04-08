@@ -292,9 +292,7 @@ internal class Program
                     }
                     if (counter % 6 == 0 && counter > 131) //Printing evey round as requested from the assignment 
                     {
-                        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
                         PrintTableUpper(league, league.UpperScoreboard);
-                        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
                         PrintTableLower(league, league.LowerScoreboard);
                     }
                     counter++; // the counter is here so that i have more control on the matches. Each file is composed by 6 iterations (because of 6 lines of matches and results) so i can decide better if i want triggere events at counter = 1 or at counter = 6 (which are in the same csv files) -Andrea
@@ -305,6 +303,7 @@ internal class Program
 
     static void PrintTable(League league, List<Team> teams)
     {
+        Console.WriteLine($"/*{league.Name}*/");
         //prints Table header
         PrintTableHeader();
 
@@ -328,18 +327,18 @@ internal class Program
             string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
 
-            
+
             // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
             if (league.Name == "Super Liga")
             {
-                    if (teamNumber == 1)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
-                    else if (teamNumber == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                    }
+                if (teamNumber == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (teamNumber == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
             }
             else
             {
@@ -373,7 +372,7 @@ internal class Program
             Console.Write("|");
             Console.WriteLine();
             prevPoints = team.Points;
-            
+
         }
 
         // Prints the table footer
@@ -382,6 +381,7 @@ internal class Program
 
     static void PrintTableUpper(League league, List<Team> teams)
     {
+        Console.WriteLine($"/*{league.Name} - UPPER SCOREBOARD*/");
         //prints Table header
         PrintTableHeader();
 
@@ -405,19 +405,19 @@ internal class Program
             string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
 
-            
+
             // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
             //Changed to Pattern Matching TODO
             if (league.Name == "Super Liga")
             {
-                    if (teamNumber == 1)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                    }
-                    else if (teamNumber == 2)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                    }
+                if (teamNumber == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                }
+                else if (teamNumber == 2)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                }
             }
             else
             {
@@ -447,7 +447,7 @@ internal class Program
             Console.Write("|");
             Console.WriteLine();
             prevPoints = team.Points;
-            
+
         }
 
         // Prints the table footer
@@ -456,6 +456,7 @@ internal class Program
 
     static void PrintTableLower(League league, List<Team> teams)
     {
+        Console.WriteLine($"/*{league.Name} - LOWER SCOREBOARD*/");
         //prints Table header
         PrintTableHeader();
 
@@ -479,7 +480,7 @@ internal class Program
             string winningStreak = string.Join("|", team.WinningStreak);
             Console.Write("|");
 
-            
+
             // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
             //Changed to Pattern Matching TODO
             if (teamNumber == 5 || teamNumber == 6)
@@ -507,7 +508,7 @@ internal class Program
             Console.Write("|");
             Console.WriteLine();
             prevPoints = team.Points;
-            
+
         }
 
         // Prints the table footer
