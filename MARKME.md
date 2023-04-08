@@ -8,11 +8,11 @@ Every variable and constant has a type, as does every expression that evaluates 
 # Null handling
 We used the null coalescing operator to deal with nullable value types or reference types that may be null. Following there two example of how we implemented it:
 
-    Example 1:
+    //Example 1:
     string line = reader.ReadLine() ?? throw new Exception("Error in reading file");
 
-    Example 2:
-    Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}");
+    //Example 2:
+    Team teamHome = teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found: {values[0]} in {match}");
 
 # String Interpolation
 We did use string interpolation for example when printing the league name above the scoreboard:
@@ -24,16 +24,42 @@ or when throwing a new exception:
     Team teamHome = league.Teams.Find(team => team.Abbreviation == values[0]) ?? throw new Exception($"Team not found{values[0]}");
 
 # Pattern Matching
-We did pattern matching while polishing the code. We are using pattern matching in the method 'PrintTable()'. Following the example of pattern matching
+We did not use pattern matching. We could have use it for example in the 'PrintTable()' where we set the console colors. Now we have:
 
-    Console.ForegroundColor = (league.Name, position, teamNumber) switch
+    if (league.Name == "Super Liga")
+            {
+                    if (teamNumber == 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
+                    else if (teamNumber == 2)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                    }
+            }
+            else
+            {
+                if (teamNumber == 1 || teamNumber == 2)
                 {
-                    ("Super Liga", 1, _) => ConsoleColor.DarkYellow,
-                    ("Super Liga", 2, _) => ConsoleColor.Magenta,
-                    (_, _, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
-                    (_, _, var n) when n >= teams.Count - 1 => ConsoleColor.Red,
-                    _ => Console.ForegroundColor // fallback to the default color if no pattern is matched
-                };
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+            }
+            if (teamNumber == 11 || teamNumber == 12)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+
+But we could have:
+
+    Console.ForegroundColor = (league.Name, teamNumber) switch
+    {
+        ("Super Liga", 1) => ConsoleColor.Yellow,
+        ("Super Liga", 2) => ConsoleColor.Magenta,
+        (_, var n) when n == 1 || n == 2 => ConsoleColor.Blue,
+        (_, var n) when n == 11 || n == 12 => ConsoleColor.Red,
+        // Fallback to the default color if no pattern is matched
+        _ => Console.ForegroundColor
+    };
 
 # Classes, structs and enums
 In the project we only have used classes for 'Team' and 'League'.

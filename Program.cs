@@ -330,7 +330,6 @@ internal class Program
 
             
             // Coloring for Superliga: First place goes to Champions League, second place goes to Europa League.
-            //Changed to Pattern Matching TODO
             if (league.Name == "Super Liga")
             {
                     if (teamNumber == 1)
